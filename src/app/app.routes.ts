@@ -4,6 +4,9 @@ import { LayoutComponent } from './pages/layout/layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CustomerComponent } from './pages/customer/customer.component';
 import { ProductsComponent } from './products/products.component';
+import { inject } from '@angular/core';
+import { Router } from 'express';
+import { AuthGuard } from './guard/auth.guard';
 
 export const appRoutes: Routes = [
     {
@@ -19,17 +22,20 @@ export const appRoutes: Routes = [
         path: '',
         component: LayoutComponent,
         children: [
-            {
-                path: 'dashboard',
-                component: DashboardComponent
+            { path: 'dashboard', loadComponent: () => import('./pages/dashboard/dashboard.component')
+              .then(m => m.DashboardComponent) ,
+              canActivate: [AuthGuard] 
+
             },
             {
                 path: 'products',
-                component: ProductsComponent
+                component: ProductsComponent,
+                canActivate: [AuthGuard] 
             },
             {
                 path: 'customers',
-                component: CustomerComponent
+                component: CustomerComponent,
+                canActivate: [AuthGuard] 
             },
         ]
     }

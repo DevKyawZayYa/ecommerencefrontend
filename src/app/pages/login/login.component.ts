@@ -1,32 +1,42 @@
-import { Component, inject } from '@angular/core';
-import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
+import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { AuthService } from '../../services/auth.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule], // Ensure HttpClientModule is imported
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  loginForm = new FormGroup({
+    email: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required])
+  });
 
-  userName: FormControl = new FormControl();
-
-  password: FormControl = new FormControl();
-
-  router = inject(Router);
+  constructor(private authService: AuthService, private router: Router) {}
 
   onLogin() {
-    debugger;
-    if(this.userName.value === 'admin' && this.password.value === '2233')
-    {
-      this.router.navigate(['/dashboard']);
+    if (this.loginForm.invalid) {
+      alert('Please fill in all fields');
+      return;
     }
-    else
-    {
-      alert('Invalid Credentials');
-    }
+
+    const { email, password } = this.loginForm.value;
+
+    this.authService.login(email!, password!).subscribe({
+      next: (res) => {
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => {
+        alert('Invalid credentials');
+      }
+    });
   }
 }
