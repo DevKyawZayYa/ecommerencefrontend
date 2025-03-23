@@ -1,32 +1,46 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http'; // Import HttpClientModule
 import { Router } from '@angular/router';
-
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule], // Add HttpClientModule here
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-
-  userName: FormControl = new FormControl();
-
-  password: FormControl = new FormControl();
+  userName = new FormControl('');
+  password = new FormControl('');
 
   router = inject(Router);
+  http = inject(HttpClient);
 
   onLogin() {
-    debugger;
-    if(this.userName.value === 'admin' && this.password.value === '2233')
-    {
-      this.router.navigate(['/dashboard']);
+    console.log('Login button clicked');
+
+    const username = this.userName.value;
+    const password = this.password.value;
+
+    if (!username || !password) {
+      alert('Please enter both username and password');
+      return;
     }
-    else
-    {
-      alert('Invalid Credentials');
-    }
+
+    this.http.post<any>('https://localhost:7155/api/Onboarding/Login', {
+      username,
+      password
+    }).subscribe({
+      next: (res) => {
+        localStorage.setItem('accessToken', res.accessToken);
+        localStorage.setItem('refreshToken', res.refreshToken);
+        this.router.navigate(['/products']);
+      },
+      error: (err) => {
+        alert('Invalid credentials');
+      }
+    });
   }
 }

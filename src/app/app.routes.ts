@@ -4,6 +4,21 @@ import { LayoutComponent } from './pages/layout/layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { CustomerComponent } from './pages/customer/customer.component';
 import { ProductsComponent } from './products/products.component';
+import { inject } from '@angular/core';
+import { Router } from 'express';
+
+
+const authGuard = () => {
+    const token = localStorage.getItem('accessToken');
+    const router = inject(Router);
+
+    if(!token) {
+        router.navigate(['/login']);
+        return false;
+    }
+
+    return true;
+};
 
 export const appRoutes: Routes = [
     {
@@ -18,6 +33,7 @@ export const appRoutes: Routes = [
     {
         path: '',
         component: LayoutComponent,
+        canActivate: [authGuard],
         children: [
             {
                 path: 'dashboard',
@@ -33,4 +49,5 @@ export const appRoutes: Routes = [
             },
         ]
     }
+    
 ];
