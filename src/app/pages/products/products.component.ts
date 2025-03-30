@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { Product, ProductResponse } from '../models/product.model';
+import { Product, ProductResponse } from '../../models/product.model';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-products',
   imports: [CommonModule],
+  standalone: true,
   templateUrl: './products.component.html',
   styleUrl: './products.component.css'
 })

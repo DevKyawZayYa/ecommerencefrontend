@@ -1,11 +1,19 @@
 import { Component } from '@angular/core';
+import { ProductsComponent } from '../products/products.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, ProductsComponent], 
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent {
-
+  categories = [
+    { name: 'Fashion', image: 'assets/fashion.jpg' },
+    { name: 'Electronics', image: 'assets/electronics.jpg' },
+    { name: 'Toys', image: 'assets/toys.jpg' },
+    { name: 'Kitchen', image: 'assets/kitchen.jpg' }
+  ];
 }
