@@ -40,4 +40,12 @@ export class AuthService {
     }
     return false;
   }
+  
+  getUserId(): string | null {
+    return localStorage.getItem('userId'); // make sure you store userId on login
+  }
+  
+  get isLoggedInSync(): boolean {
+    return this.hasToken();
+  }
 }

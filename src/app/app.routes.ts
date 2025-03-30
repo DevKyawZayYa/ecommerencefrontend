@@ -1,4 +1,3 @@
-
 import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './pages/layout/layout.component';
@@ -26,8 +25,8 @@ export const appRoutes: Routes = [
         loadComponent: () =>
           import('./pages/products/products.component').then(
             (m) => m.ProductsComponent
-          ),
-        canActivate: [AuthGuard], 
+          )
+        // ✅ Removed: canActivate: [AuthGuard]
       },
       {
         path: 'customers',
@@ -35,6 +34,12 @@ export const appRoutes: Routes = [
           import('./pages/customer/customer.component').then(
             (m) => m.CustomerComponent
           ),
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'cart',
+        loadComponent: () =>
+          import('./pages/cart/cart.component').then((m) => m.CartComponent),
         canActivate: [AuthGuard],
       },
     ],
