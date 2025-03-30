@@ -1,0 +1,47 @@
+<div class="container my-4">
+    <h4>Delivery Address</h4>
+    <p><strong>{{ customer.name }}</strong> ({{ customer.phone }})</p>
+    <p>{{ customer.address }}</p>
+  
+    <hr />
+  
+    <h5>Products Ordered</h5>
+    <div *ngFor="let item of items" class="border-bottom py-2">
+      <div class="d-flex justify-content-between">
+        <div>
+          <strong>{{ item.name }}</strong><br />
+          <small>Qty: {{ item.quantity }}</small>
+        </div>
+        <div>
+          RM{{ (item.price * item.quantity).toFixed(2) }}
+        </div>
+      </div>
+    </div>
+  
+    <hr />
+  
+    <div class="mb-3">
+      <label class="form-label">Select Payment Method:</label><br />
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="hlb" value="Hong Leong" [(ngModel)]="selectedPaymentMethod" />
+        <label class="form-check-label" for="hlb">Hong Leong Connect</label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="agro" value="Agrobank" [(ngModel)]="selectedPaymentMethod" />
+        <label class="form-check-label" for="agro">Agrobank</label>
+      </div>
+    </div>
+  
+    <hr />
+  
+    <div class="text-end">
+      <p>Merchandise Subtotal: RM{{ total.toFixed(2) }}</p>
+      <p>Shipping: RM{{ shippingCost.toFixed(2) }}</p>
+      <p class="fw-bold">Total Payment: RM{{ getGrandTotal().toFixed(2) }}</p>
+  
+      <button class="btn btn-danger" [disabled]="!selectedPaymentMethod" (click)="placeOrder()">
+        Place Order
+      </button>
+    </div>
+  </div>
+  

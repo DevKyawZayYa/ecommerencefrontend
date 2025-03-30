@@ -3,7 +3,7 @@ import { Product, ProductResponse } from '../../models/product.model';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/addtocart/cart.service';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 
 @Component({

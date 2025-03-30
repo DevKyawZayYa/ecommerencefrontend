@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/addtocart/cart.service';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-cart',
@@ -15,7 +17,11 @@ export class CartComponent implements OnInit {
   selectedItems: Set<string> = new Set(); // Track selected productIds
   total: number = 0;
 
-  constructor(private cartService: CartService) {}
+  constructor(
+    private cartService: CartService,
+    private router: Router) 
+  
+    {}
 
   ngOnInit(): void {
     const customerId = '2457c2b7-b9de-44c6-bbe1-0791fd0ca6ad';
@@ -57,10 +63,17 @@ export class CartComponent implements OnInit {
     alert('❌ Remove not yet wired to backend');
   }
 
+
   checkout() {
     const selected = this.items.filter(i => this.selectedItems.has(i.productId));
-    alert('Proceeding to checkout with ' + selected.length + ' item(s)');
+  
+    // 💾 Store selected items in localStorage
+    localStorage.setItem('selectedItems', JSON.stringify(selected));
+  
+    // 🔁 Navigate to Checkout page
+    this.router.navigate(['/checkout']);
   }
+  
 }
 
   
