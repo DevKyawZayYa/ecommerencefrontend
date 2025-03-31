@@ -26,14 +26,22 @@ export class CheckoutComponent implements OnInit {
   constructor(private http: HttpClient, private router: Router) {}
 
   ngOnInit(): void {
-    // Replace with cart service if needed
     this.items = JSON.parse(localStorage.getItem('selectedItems') || '[]');
-
     this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   }
 
   getGrandTotal(): number {
     return this.total + this.shippingCost;
+  }
+
+  handlePlaceOrderClick(): void {
+    if (this.selectedPaymentMethod === 'CashOnDelivery') {
+      this.placeOrder(); // Create Order and call Payment
+    } else if (this.selectedPaymentMethod === 'Stripe') {
+      this.startStripeCheckout(); // Only redirect to Stripe, no order yet
+    } else {
+      alert('Please select a payment method');
+    }
   }
 
   placeOrder(): void {
@@ -55,12 +63,37 @@ export class CheckoutComponent implements OnInit {
 
     this.http.post('https://localhost:7155/api/orders', orderPayload).subscribe({
       next: (res: any) => {
-        debugger;
         const orderId = res?.value?.orderId ?? 'mock-id';
         this.startPayment(orderId, this.getGrandTotal());
       },
       error: err => console.error('Order failed', err)
     });
+  }
+
+  startStripeCheckout(): void {
+    const stripePayload = {
+      items: this.items.map(item => ({
+        productName: item.name,
+        quantity: item.quantity,
+        price: item.price
+      }))
+    };
+
+    this.http.post<any>('https://localhost:7155/api/stripe/create-checkout-session', stripePayload)
+      .subscribe({
+        next: (res) => {
+          if (res?.url) {
+            this.placeOrder();
+            window.location.href = res.url; // redirect to Stripe
+          } else {
+            alert('Failed to get Stripe URL');
+          }
+        },
+        error: err => {
+          console.error('❌ Stripe checkout failed:', err);
+          alert('Stripe checkout failed');
+        }
+      });
   }
 
   startPayment(orderId: string, amount: number) {
@@ -72,7 +105,6 @@ export class CheckoutComponent implements OnInit {
       transactionId: 'TXN_' + Date.now(),
       transactionType: 'Online'
     };
-    debugger;
 
     this.http.post('https://localhost:7155/api/Payment', paymentPayload).subscribe({
       next: () => {

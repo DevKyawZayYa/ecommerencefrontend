@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { LoginComponent } from './pages/login/login.component';
 import { LayoutComponent } from './pages/layout/layout.component';
 import { AuthGuard } from './guard/auth.guard';
+import { PaymentSuccessComponent } from './pages/payment-success/payment-success.component';
+import { PaymentCancelComponent } from './pages/payment-cancel/payment-cancel.component';
 
 export const appRoutes: Routes = [
   {
@@ -48,6 +50,15 @@ export const appRoutes: Routes = [
           import('./pages/checkout/checkout.component').then((m) => m.CheckoutComponent),
         canActivate: [AuthGuard],
       },
+      {
+        path: 'payment-success',
+        component: PaymentSuccessComponent
+      },
+      {
+        path: 'payment-cancel',
+        component: PaymentCancelComponent
+      }
+      
     ],
   },
   {

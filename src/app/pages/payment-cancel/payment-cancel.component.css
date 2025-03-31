@@ -1,0 +1,5 @@
+<div class="container text-center mt-5">
+  <h2 class="text-danger">❌ Payment Failed or Cancelled</h2>
+  <p>If your card was declined, please try again with a different payment method.</p>
+  <a routerLink="/cart" class="btn btn-outline-primary mt-3">Go Back to Cart</a>
+</div>
