@@ -4,11 +4,12 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
+import { AuthResponse } from '../../models/auth-response.model';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, HttpClientModule], // Ensure HttpClientModule is imported
+  imports: [CommonModule, ReactiveFormsModule, HttpClientModule], 
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -29,7 +30,7 @@ export class LoginComponent {
     const { email, password } = this.loginForm.value;
 
     this.authService.login(email!, password!).subscribe({
-      next: (res) => {
+      next: (res: AuthResponse) => {
         localStorage.setItem('accessToken', res.accessToken);
         localStorage.setItem('refreshToken', res.refreshToken);
         this.router.navigate(['/dashboard']);
@@ -38,5 +39,6 @@ export class LoginComponent {
         alert('Invalid credentials');
       }
     });
+    
   }
 }

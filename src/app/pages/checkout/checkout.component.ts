@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-checkout',
@@ -23,7 +23,10 @@ export class CheckoutComponent implements OnInit {
   items: any[] = [];
   total = 0;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(
+    private api: ApiService, 
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.items = JSON.parse(localStorage.getItem('selectedItems') || '[]');
@@ -36,9 +39,9 @@ export class CheckoutComponent implements OnInit {
 
   handlePlaceOrderClick(): void {
     if (this.selectedPaymentMethod === 'CashOnDelivery') {
-      this.placeOrder(); // Create Order and call Payment
+      this.placeOrder();
     } else if (this.selectedPaymentMethod === 'Stripe') {
-      this.startStripeCheckout(); // Only redirect to Stripe, no order yet
+      this.startStripeCheckout();
     } else {
       alert('Please select a payment method');
     }
@@ -61,7 +64,7 @@ export class CheckoutComponent implements OnInit {
       deliveryStatus: 'NotShipped'
     };
 
-    this.http.post('https://localhost:7155/api/orders', orderPayload).subscribe({
+    this.api.post('orders', orderPayload).subscribe({
       next: (res: any) => {
         const orderId = res?.value?.orderId ?? 'mock-id';
         this.startPayment(orderId, this.getGrandTotal());
@@ -79,21 +82,19 @@ export class CheckoutComponent implements OnInit {
       }))
     };
 
-    this.http.post<any>('https://localhost:7155/api/stripe/create-checkout-session', stripePayload)
-      .subscribe({
-        next: (res) => {
-          if (res?.url) {
-            this.placeOrder();
-            window.location.href = res.url; // redirect to Stripe
-          } else {
-            alert('Failed to get Stripe URL');
-          }
-        },
-        error: err => {
-          console.error('❌ Stripe checkout failed:', err);
-          alert('Stripe checkout failed');
+    this.api.post<any>('stripe/create-checkout-session', stripePayload).subscribe({
+      next: (res) => {
+        if (res?.url) {
+          window.location.href = res.url;
+        } else {
+          alert('Failed to get Stripe URL');
         }
-      });
+      },
+      error: err => {
+        console.error('❌ Stripe checkout failed:', err);
+        alert('Stripe checkout failed');
+      }
+    });
   }
 
   startPayment(orderId: string, amount: number) {
@@ -106,7 +107,7 @@ export class CheckoutComponent implements OnInit {
       transactionType: 'Online'
     };
 
-    this.http.post('https://localhost:7155/api/Payment', paymentPayload).subscribe({
+    this.api.post('payment', paymentPayload).subscribe({
       next: () => {
         alert('✅ Payment Successful!');
         this.router.navigate(['/orders']);

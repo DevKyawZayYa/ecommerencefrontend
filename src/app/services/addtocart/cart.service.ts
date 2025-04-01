@@ -1,17 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { ApiService } from '../../core/services/api.service';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
   private cartItems: any[] = [];
-  private apiUrl = 'https://localhost:7155/api/cart';
 
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiService) {}
 
-  addToCart(customerId: string, product: any) {
-
-    console.log('hi product', product);
-
+  addToCart(customerId: string, product: any): Observable<any> {
     const payload = {
       customerId: {
         value: customerId
@@ -27,24 +24,21 @@ export class CartService {
       ]
     };
 
-    return this.http.post(`${this.apiUrl}/add`, payload);
+    return this.api.post('cart/add', payload); // ✅ Cleaned API usage
   }
 
-  getItems() {
+  getItems(): any[] {
     return this.cartItems;
   }
 
-  getCartTotal() {
+  getCartTotal(): number {
     return this.cartItems.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
   }
 
-  getCartItemsByCustomerId(customerId: string) {
-    return this.http.get<any[]>(
-      `https://localhost:7155/api/cart/getCartItemsByCustomerId?CustomerId=${customerId}`
-    );
+  getCartItemsByCustomerId(customerId: string): Observable<any[]> {
+    return this.api.get<any[]>(`cart/getCartItemsByCustomerId?CustomerId=${customerId}`);
   }
-  
 }

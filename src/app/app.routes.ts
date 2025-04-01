@@ -21,14 +21,17 @@ export const appRoutes: Routes = [
           import('./pages/dashboard/dashboard.component').then(
             (m) => m.DashboardComponent
           ),
+          canActivate: [AuthGuard],
+
       },
       {
         path: 'products',
         loadComponent: () =>
           import('./pages/products/products.component').then(
             (m) => m.ProductsComponent
-          )
-        // ✅ Removed: canActivate: [AuthGuard]
+          ),
+          canActivate: [AuthGuard],
+
       },
       {
         path: 'customers',
@@ -52,11 +55,15 @@ export const appRoutes: Routes = [
       },
       {
         path: 'payment-success',
-        component: PaymentSuccessComponent
+        component: PaymentSuccessComponent,
+        canActivate: [AuthGuard],
+
       },
       {
         path: 'payment-cancel',
-        component: PaymentCancelComponent
+        component: PaymentCancelComponent,
+        canActivate: [AuthGuard],
+
       }
       
     ],
