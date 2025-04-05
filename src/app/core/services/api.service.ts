@@ -31,9 +31,10 @@ export class ApiService {
     });
   }
 
-  put<T>(url: string, body: any) {
+  put<T>(url: string, body: any, responseType: 'json' | 'text' = 'json') {
     return this.http.put<T>(`${environment.apiUrl}/${url}`, body, {
-      headers: this.getHeaders()
+      headers: this.getHeaders(),
+      responseType: responseType as any
     });
   }
 

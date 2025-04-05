@@ -1,0 +1,60 @@
+<!-- Only edit section needs to change -->
+  <ng-container>
+    <div class="profile-layout">
+        <app-account-sidebar></app-account-sidebar>
+      
+        <div class="profile-main">
+          <div class="address-header">
+            <h3>My Addresses</h3>
+            <button class="add-address-btn">+ Add New Address</button>
+          </div>
+      
+          <div class="address-card" *ngIf="user">
+            <div class="address-info">
+              <ng-container *ngIf="!editMode">
+                <strong>{{ user.firstName.value }}</strong>
+                <span>({{ user.mobileCode }} {{ user.mobileNumber }})</span>
+                <p>
+                  {{ user.address }}<br />
+                  {{ user.city }}, {{ user.region }}, {{ user.postalCode }}<br />
+                  {{ user.country }}
+                </p>
+                <button class="default-badge">Default</button>
+              </ng-container>
+            </div>
+      
+            <div class="address-actions">
+                <button (click)="onEdit()">Edit</button> |
+                <button>Delete</button>
+              <br />
+              <button>Set as default</button>
+            </div>
+          </div> 
+        </div>
+    </div>
+  
+<!-- ✅ Modal & Backdrop OUTSIDE card -->
+      <div *ngIf="editMode">
+        <div class="modal-backdrop" (click)="closeModal()"></div>
+        <div class="modal">
+          <div class="modal-content">
+            <h3>Edit Address</h3>
+            <form (ngSubmit)="onSaveAddress()" #form="ngForm" class="edit-address-form">
+              <input [(ngModel)]="user!.firstName.value" name="firstName" placeholder="Name" required />
+              <input [(ngModel)]="user!.mobileNumber" name="mobileNumber" placeholder="Phone" required />
+              <textarea [(ngModel)]="user!.address" name="address" rows="2" placeholder="Address" required></textarea>
+              <input [(ngModel)]="user!.city" name="city" placeholder="City" />
+              <input [(ngModel)]="user!.region" name="region" placeholder="Region" />
+              <input [(ngModel)]="user!.postalCode" name="postalCode" placeholder="Postal Code" />
+              <input [(ngModel)]="user!.country" name="country" placeholder="Country" />
+  
+              <div class="edit-actions">
+                <button type="submit" class="save-button">Submit</button>
+                <button type="button" class="cancel-button" (click)="closeModal()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+  </ng-container>
+  

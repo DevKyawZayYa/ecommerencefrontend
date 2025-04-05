@@ -1,0 +1,139 @@
+.profile-wrapper {
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.profile-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.profile-header .subtitle {
+  color: #777;
+  font-size: 0.9rem;
+}
+
+.profile-content {
+  display: flex;
+  margin-top: 24px;
+  gap: 32px;
+}
+
+.profile-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.readonly {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 6px;
+  width: 100%;
+}
+
+.field-inline {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-link {
+  font-size: 0.85rem;
+  color: #f44336;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.radio-group {
+  display: flex;
+  gap: 20px;
+}
+
+.save-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.profile-avatar {
+  text-align: center;
+  width: 200px;
+}
+
+.profile-avatar img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 12px;
+}
+
+.upload-button {
+  display: block;
+  margin: 0 auto 8px auto;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.profile-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 32px;
+  margin: 30px;
+}
+
+app-account-sidebar {
+  flex: 0 0 240px; /* fix width */
+}
+
+.profile-main {
+  flex: 1;
+  padding-right: 16px;
+}
+
+.editable {
+  border: 1px solid #999;
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.cancel {
+  color: #999;
+}
+
+input[placeholder] {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}

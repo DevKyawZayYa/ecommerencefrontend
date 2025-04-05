@@ -64,8 +64,18 @@ export const appRoutes: Routes = [
         component: PaymentCancelComponent,
         canActivate: [AuthGuard],
 
-      }
-      
+      },
+      {
+        path: 'account/profile',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('./pages/customer/profile/profile.component').then(m => m.ProfileComponent)
+      },
+      {
+        path: 'account/addresses',
+        canActivate: [AuthGuard],
+        loadComponent: () =>
+          import('./pages/customer/addresses/addresses.component').then(m => m.AddressesComponent)
+      },        
     ],
   },
   {

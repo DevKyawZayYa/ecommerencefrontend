@@ -1,0 +1,116 @@
+<div class="profile-layout">
+  <!-- Sidebar -->
+  <app-account-sidebar></app-account-sidebar>
+
+  <!-- Main Profile Section -->
+  <div class="profile-main">
+    <div class="profile-wrapper" *ngIf="profileForm">
+      <div class="profile-header">
+        <h2>My Profile</h2>
+        <p class="subtitle">Manage and protect your account</p>
+      </div>
+
+      <div class="profile-content">
+        <!-- LEFT: Profile Form -->
+        <form [formGroup]="profileForm" class="profile-form">
+
+          <div class="form-group">
+            <label>Name</label>
+            <div class="field-inline">
+              <ng-container *ngIf="!editMode.name; else editName">
+                <input
+                  [value]="profileForm.get('firstName')?.value + ' ' + profileForm.get('lastName')?.value"
+                  readonly
+                  class="readonly"
+                />
+                <a (click)="editMode.name = true" class="action-link">Change</a>
+              </ng-container>
+
+              <ng-template #editName>
+                <div class="field-inline" style="gap: 8px;">
+                  <input formControlName="firstName" placeholder="First Name" />
+                  <input formControlName="lastName" placeholder="Last Name" />
+                  <a (click)="editMode.name = false" class="action-link cancel">Cancel</a>
+                </div>
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <div class="field-inline">
+              <ng-container *ngIf="!editMode.email; else editEmail">
+                <input formControlName="email" readonly class="readonly" />
+                <a (click)="editMode.email = true" class="action-link">Change</a>
+              </ng-container>
+
+              <ng-template #editEmail>
+                <input formControlName="email" class="editable" />
+                <a (click)="editMode.email = false" class="action-link cancel">Cancel</a>
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <div class="field-inline">
+              <ng-container *ngIf="!editMode.phone; else editPhone">
+                <input [value]="profileForm.get('mobileCode')?.value + ' ' + profileForm.get('mobileNumber')?.value" readonly class="readonly" />
+                <a (click)="editMode.phone = true" class="action-link">Change</a>
+              </ng-container>
+
+              <ng-template #editPhone>
+                <input formControlName="mobileCode" style="width: 60px;" />
+                <input formControlName="mobileNumber" />
+                <a (click)="editMode.phone = false" class="action-link cancel">Cancel</a>
+              </ng-template>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Gender</label>
+            <div class="radio-group">
+              <label>
+                <input type="radio" formControlName="gender" value="Male" (change)="profileForm.markAsDirty()" /> Male
+              </label>
+              <label>
+                <input type="radio" formControlName="gender" value="Female" (change)="profileForm.markAsDirty()" /> Female
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Date of Birth</label>
+            <div class="field-inline">
+              <ng-container *ngIf="!editMode.dob; else editDob">
+                <span>{{ profileForm.get('dob')?.value | date: 'MMM d, y' }}</span>
+                <a (click)="editMode.dob = true" class="action-link">Change</a>
+              </ng-container>
+
+              <ng-template #editDob>
+                <input type="date" formControlName="dob" />
+                <a (click)="editMode.dob = false" class="action-link cancel">Cancel</a>
+              </ng-template>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="save-button"
+            [disabled]="!profileForm.valid || !profileForm.dirty"
+            (click)="onSave()"
+          >
+            Save
+          </button>
+        </form>
+
+        <!-- RIGHT: Avatar Upload -->
+        <div class="profile-avatar">
+          <img src="https://via.placeholder.com/100" alt="Avatar" />
+          <button class="upload-button">Select Image</button>
+          <small>File size: max 1 MB<br />File format: .JPEG, .PNG</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

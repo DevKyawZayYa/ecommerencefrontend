@@ -14,6 +14,9 @@ import { CartService } from '../../services/addtocart/cart.service';
 export class LayoutComponent implements OnInit {
   authService = inject(AuthService);
   isLoggedIn$ = this.authService.isLoggedIn();
+  showMenu = false;
+  username = 'kyawzayya656'; 
+  isLoggedIn = true;
 
   cartCount = 0;
 
@@ -36,5 +39,9 @@ export class LayoutComponent implements OnInit {
 
   onLogout() {
     this.authService.logout();
+  } 
+
+  toggleDropdown() {
+    this.showMenu = !this.showMenu;
   }
 }
