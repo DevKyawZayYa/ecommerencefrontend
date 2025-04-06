@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/addtocart/cart.service';
 import { Router } from '@angular/router';
+import { Customer } from '../../models/customer.model';
+import { CustomerService } from '../../services/customer/customer.service';
 
 
 @Component({
@@ -19,26 +21,40 @@ export class CartComponent implements OnInit {
 
   constructor(
     private cartService: CartService,
-    private router: Router) 
+    private router: Router,
+    private customerService: CustomerService,
+  )
   
     {}
 
-  ngOnInit(): void {
-    const customerId = '2457c2b7-b9de-44c6-bbe1-0791fd0ca6ad';
-
-    this.cartService.getCartItemsByCustomerId(customerId).subscribe({
-      next: (res) => {
-        if (res.length > 0 && res[0].items) {
-          this.items = res[0].items;
-          this.total = res[0].totalPrice;
-          this.selectedItems = new Set(res[0].items.map((i: any) => i.productId));
+    ngOnInit(): void {
+      this.customerService.getMyProfile().subscribe({
+        next: (data: Customer) => {
+          const customerId = data.id?.value;
+    
+          if (customerId) {
+            this.cartService.getCartItemsByCustomerId(customerId).subscribe({
+              next: (res) => {
+                if (res.length > 0 && res[0].items) {
+                  this.items = res[0].items;
+                  this.total = res[0].totalPrice;
+                  this.selectedItems = new Set(res[0].items.map((i: any) => i.productId));
+                }
+              },
+              error: (err) => {
+                console.error('❌ Failed to load cart', err);
+              }
+            });
+          } else {
+            console.warn('⚠️ No customer ID found from profile.');
+          }
+        },
+        error: (err) => {
+          console.error('❌ Failed to load profile', err);
         }
-      },
-      error: (err) => {
-        console.error('❌ Failed to load cart', err);
-      }
-    });
-  }
+      });
+    }
+    
   
   onCheckboxChange(event: Event, productId: string): void {
     const input = event.target as HTMLInputElement;

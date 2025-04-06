@@ -18,8 +18,7 @@ export class CustomerService {
     return this.api.get<{ id: string }>('User/me').pipe(
       switchMap((res) => this.getCustomerById(res.id))
     );
-  }
-  
+  } 
 
   getCustomerById(id: string): Observable<Customer> {
     return this.api.get<Customer>(`${this.baseUrl}/${id}`);

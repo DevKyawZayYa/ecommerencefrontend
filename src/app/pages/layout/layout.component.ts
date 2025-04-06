@@ -23,19 +23,19 @@ export class LayoutComponent implements OnInit {
   constructor(private cartService: CartService) {}
 
   ngOnInit(): void {
-    const customerId = '2457c2b7-b9de-44c6-bbe1-0791fd0ca6ad'; // temporary test ID
-
+    // 🚧 Use current user from auth service later
+    const customerId = '2457c2b7-b9de-44c6-bbe1-0791fd0ca6ad';
+  
     this.cartService.getCartItemsByCustomerId(customerId).subscribe({
       next: (res) => {
-        if (res.length > 0 && res[0].items) {
-          this.cartCount = res[0].items.length;
-        }
+        this.cartCount = res?.[0]?.items?.length || 0;
       },
       error: (err) => {
         console.error('❌ Failed to load cart count', err);
       }
     });
   }
+  
 
   onLogout() {
     this.authService.logout();

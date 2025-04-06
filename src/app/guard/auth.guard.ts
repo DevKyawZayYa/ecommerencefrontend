@@ -22,7 +22,6 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
-    // For server-side rendering (optional)
     return false;
   }
 }

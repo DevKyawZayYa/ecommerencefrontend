@@ -1,5 +1,5 @@
 export interface Customer {
-  id: { value: string }; // ✅ This must match the backend return
+  id: { value: string }; 
   firstName: { value: string };
   lastName: { value: string };
   email: string;

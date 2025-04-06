@@ -57,8 +57,6 @@ export class ProfileComponent implements OnInit {
     this.customerService.getMyProfile().subscribe((data: Customer) => {
       this.userId = data.id?.value; // ✅ this is string now
 
-      debugger;
-
       this.profileForm.patchValue({
         id: this.userId,
         firstName: data.firstName?.value,
@@ -83,8 +81,6 @@ export class ProfileComponent implements OnInit {
 
   onSave(): void {
     if (!this.profileForm.valid) return;
-
-    debugger;
 
     const formData = this.profileForm.value;
 

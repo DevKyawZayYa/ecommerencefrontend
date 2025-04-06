@@ -29,7 +29,6 @@ export class ProductsComponent implements OnInit {
   }
 
   fetchProducts(): void {
-    
     this.api.get<ProductResponse>('products?page=1&pageSize=50').subscribe({
       next: (res) => {
         this.products = res.items;
