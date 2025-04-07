@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { Customer } from '../../models/customer.model';
 import { CustomerService } from '../../services/customer/customer.service';
+import { OrderService } from '../../services/order/order.service';
 
 @Component({
   selector: 'app-checkout',
@@ -15,11 +16,11 @@ import { CustomerService } from '../../services/customer/customer.service';
 })
 export class CheckoutComponent implements OnInit {
   customer = {
+    id: '',
     name: '',
     phone: '',
     address: ''
   };
-  
 
   shippingCost = 5.19;
   selectedPaymentMethod = '';
@@ -27,31 +28,30 @@ export class CheckoutComponent implements OnInit {
   total = 0;
 
   constructor(
-    private api: ApiService, 
+    private api: ApiService,
     private router: Router,
     private customerService: CustomerService,
-    
+    private orderService: OrderService
   ) {}
 
   ngOnInit(): void {
     this.items = JSON.parse(localStorage.getItem('selectedItems') || '[]');
     this.total = this.items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  
-    // ✅ Load customer info from profile API
+
     this.customerService.getMyProfile().subscribe({
       next: (data: Customer) => {
         this.customer = {
+          id: data.id?.value,
           name: `${data?.firstName.value ?? ''} ${data?.lastName.value ?? ''}`,
           phone: `${data?.mobileCode ?? ''} ${data?.mobileNumber ?? ''}`,
           address: `${data?.address ?? ''} ${data?.city ?? ''} ${data?.country ?? ''} ${data?.postalCode ?? ''}`.trim()
-                };
+        };
       },
       error: (err) => {
         console.error('❌ Failed to load customer info', err);
       }
     });
   }
-  
 
   getGrandTotal(): number {
     return this.total + this.shippingCost;
@@ -59,54 +59,26 @@ export class CheckoutComponent implements OnInit {
 
   handlePlaceOrderClick(): void {
     if (this.selectedPaymentMethod === 'CashOnDelivery') {
-      this.placeOrder();
+      const payload = this.orderService.buildOrderPayload(this.customer, this.items, this.shippingCost);
+      this.orderService.placeOrder(payload).subscribe({
+        next: (res: any) => {
+          const orderId = res?.value?.orderId ?? 'mock-id';
+          this.orderService.startPayment(orderId, this.getGrandTotal(), this.selectedPaymentMethod).subscribe({
+            next: () => {
+              alert('✅ Order placed with COD!');
+              this.router.navigate(['/orders']);
+            },
+            error: err => console.error('❌ COD payment error:', err)
+          });
+        },
+        error: err => console.error('❌ Order creation error:', err)
+      });
     } else if (this.selectedPaymentMethod === 'Stripe') {
       this.startStripeCheckout();
     } else {
       alert('Please select a payment method');
     }
   }
-
-  placeOrder(): void {
-    this.customerService.getMyProfile().subscribe({
-      next: (data: Customer) => {
-        const customerId = data.id?.value;
-  
-        if (!customerId) {
-          console.error('❌ No customer ID found!');
-          return;
-        }
-  
-        const orderPayload = {
-          customerId: { value: customerId },
-          items: this.items.map(item => ({
-            productId: item.productId,
-            productName: item.name,
-            quantity: item.quantity,
-            price: item.price
-          })),
-          taxAmount: 0,
-          shippingCost: this.shippingCost,
-          discountAmount: 0,
-          status: 'Pending',
-          paymentStatus: 'Pending',
-          deliveryStatus: 'NotShipped'
-        };
-  
-        this.api.post('orders', orderPayload).subscribe({
-          next: (res: any) => {
-            const orderId = res?.value?.orderId ?? 'mock-id';
-            this.startPayment(orderId, this.getGrandTotal());
-          },
-          error: err => console.error('Order failed', err)
-        });
-      },
-      error: err => {
-        console.error('❌ Failed to fetch profile for order', err);
-      }
-    });
-  }
-  
 
   startStripeCheckout(): void {
     const stripePayload = {
@@ -117,9 +89,11 @@ export class CheckoutComponent implements OnInit {
       }))
     };
 
-    this.api.post<any>('stripe/create-checkout-session', stripePayload).subscribe({
+    this.api.post<any>('stripe/createCheckoutSession', stripePayload).subscribe({
       next: (res) => {
         if (res?.url) {
+          localStorage.setItem('stripeSession', JSON.stringify(res));
+          localStorage.setItem('selectedItems', JSON.stringify(this.items)); // 🔐 store for reuse
           window.location.href = res.url;
         } else {
           alert('Failed to get Stripe URL');
@@ -129,25 +103,6 @@ export class CheckoutComponent implements OnInit {
         console.error('❌ Stripe checkout failed:', err);
         alert('Stripe checkout failed');
       }
-    });
-  }
-
-  startPayment(orderId: string, amount: number) {
-    const paymentPayload = {
-      orderId,
-      amount,
-      paymentMethod: this.selectedPaymentMethod,
-      paymentStatus: 'Paid',
-      transactionId: 'TXN_' + Date.now(),
-      transactionType: 'Online'
-    };
-
-    this.api.post('payment', paymentPayload).subscribe({
-      next: () => {
-        alert('✅ Payment Successful!');
-        this.router.navigate(['/orders']);
-      },
-      error: err => console.error('Payment failed', err)
     });
   }
 }

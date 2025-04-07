@@ -35,14 +35,6 @@ export const appRoutes: Routes = [
 
       },
       {
-        path: 'customers',
-        loadComponent: () =>
-          import('./pages/customer/customer.component').then(
-            (m) => m.CustomerComponent
-          ),
-        canActivate: [AuthGuard],
-      },
-      {
         path: 'cart',
         loadComponent: () =>
           import('./pages/cart/cart.component').then((m) => m.CartComponent),
