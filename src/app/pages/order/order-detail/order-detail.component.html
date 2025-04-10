@@ -1,0 +1,36 @@
+<div class="account-layout">
+  <app-account-sidebar></app-account-sidebar>
+
+  <div class="account-content">
+    <div *ngIf="!loading && order" class="order-detail-container">
+      <div class="order-card">
+        <h2>🧾 Order Summary</h2>
+        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>Delivery Status:</strong> {{ order.deliveryStatus }}</p>
+        <p><strong>Order Date:</strong> {{ order.orderDate | date:'medium' }}</p>
+    
+        <hr />
+    
+        <h4 class="mb-3">📦 Ordered Items</h4>
+        <div *ngFor="let item of order.items" class="item-row">
+          <div>
+            <strong>{{ item.productName }}</strong> x{{ item.quantity }}
+          </div>
+          <div class="price">RM {{ item.subtotal.toFixed(2) }}</div>
+        </div>
+    
+        <hr />
+    
+        <div class="summary">
+          <div><span>Subtotal:</span><span>RM {{ order.totalAmount.toFixed(2) }}</span></div>
+          <div><span>Shipping:</span><span>RM {{ order.shippingCost.toFixed(2) }}</span></div>
+          <div class="total">
+            <span>Total:</span>
+            <span>RM {{ order.grandTotal.toFixed(2) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>

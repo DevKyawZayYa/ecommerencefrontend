@@ -1,0 +1,56 @@
+.order-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 16px 0;
+    padding: 16px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    background-color: #fff;
+  }
+  
+  .order-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  .order-items {
+    margin: 12px 0;
+  }
+  
+  .item-row {
+    padding: 4px 0;
+    font-size: 15px;
+  }
+  
+  .order-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+  }
+  
+  .actions button {
+    margin-left: 8px;
+  }
+  
+  .account-layout {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .account-content {
+    flex: 1;
+  }
+  
+  .clickable {
+    cursor: pointer;
+    transition: transform 0.1s ease-in-out;
+  }
+  
+  .clickable:hover {
+    transform: scale(1.01);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  

@@ -1,0 +1,54 @@
+.account-layout {
+  display: flex;
+  min-height: 100vh; /* 🔧 makes sidebar full height */
+  background: #f9f9f9;
+  padding: 40px 20px;
+  gap: 20px;
+}
+
+.account-content {
+  flex: 1;
+  padding: 0 10px;
+}
+
+.order-detail-container {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.order-card {
+  max-width: 800px;
+  margin: auto;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px dashed #ccc;
+}
+
+.price {
+  font-weight: bold;
+}
+
+.summary {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.summary div {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.total {
+  font-size: 18px;
+  font-weight: bold;
+  color: #d60000;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
+}

@@ -69,6 +69,19 @@ export const appRoutes: Routes = [
         loadComponent: () =>
           import('./pages/customer/addresses/addresses.component').then(m => m.AddressesComponent)
       },        
+      {
+        path: 'account/my-purchase',
+        canActivate: [AuthGuard],
+        loadComponent: () =>
+          import('./pages/order/order-list/order-list.component').then(m => m.OrderListComponent)
+      },
+      {
+        path: 'account/order-detail/:orderId',
+        canActivate: [AuthGuard],
+        loadComponent: () =>
+          import('./pages/order/order-detail/order-detail.component').then(m => m.OrderDetailComponent)
+      }      
+      
     ],
   },
   {
