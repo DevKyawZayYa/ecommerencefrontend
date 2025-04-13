@@ -34,21 +34,26 @@
     </div>
   
 <!-- ✅ Modal & Backdrop OUTSIDE card -->
-      <div class="modal" *ngIf="editMode">
-        <div class="modal-content">
-          <h3>Edit Address</h3>
-          <form (ngSubmit)="onSaveAddress()" #form="ngForm" class="edit-address-form">
-            <textarea [(ngModel)]="user!.address" name="address" rows="2" placeholder="Address" required></textarea>
-            <input [(ngModel)]="user!.city" name="city" placeholder="City" required />
-            <input [(ngModel)]="user!.region" name="region" placeholder="Region" required />
-            <input [(ngModel)]="user!.postalCode" name="postalCode" placeholder="Postal Code" required />
-            <input [(ngModel)]="user!.country" name="country" placeholder="Country" required />
+      <div *ngIf="editMode">
+        <div class="modal-backdrop" (click)="closeModal()"></div>
+        <div class="modal">
+          <div class="modal-content">
+            <h3>Edit Address</h3>
+            <form (ngSubmit)="onSaveAddress()" #form="ngForm" class="edit-address-form">
+              <input [(ngModel)]="user!.firstName.value" name="firstName" placeholder="Name" required />
+              <input [(ngModel)]="user!.mobileNumber" name="mobileNumber" placeholder="Phone" required />
+              <textarea [(ngModel)]="user!.address" name="address" rows="2" placeholder="Address" required></textarea>
+              <input [(ngModel)]="user!.city" name="city" placeholder="City" />
+              <input [(ngModel)]="user!.region" name="region" placeholder="Region" />
+              <input [(ngModel)]="user!.postalCode" name="postalCode" placeholder="Postal Code" />
+              <input [(ngModel)]="user!.country" name="country" placeholder="Country" />
   
-            <div class="edit-actions">
-              <button type="submit" class="save-button">Submit</button>
-              <button type="button" class="cancel-button" (click)="closeModal()">Cancel</button>
-            </div>
-          </form>
+              <div class="edit-actions">
+                <button type="submit" class="save-button">Submit</button>
+                <button type="button" class="cancel-button" (click)="closeModal()">Cancel</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
   </ng-container>
