@@ -45,7 +45,7 @@
           style="position: absolute; top: 100%; right: 0; z-index: 1000;"
         >
         <a class="dropdown-item" routerLink="/account/profile" (click)="toggleDropdown()">👤 My Account</a>
-        <li><a class="dropdown-item" routerLink="/account/my-purchase">🧾 My Purchase</a></li>
+        <li><a class="dropdown-item" routerLink="/account/my-purchase" (click)="toggleDropdown()">🧾 My Purchase</a></li>
           <li><hr class="dropdown-divider" /></li>
           <li><a class="dropdown-item text-danger" (click)="onLogout()">🚪 Logout</a></li>
         </ul>

@@ -4,6 +4,7 @@ import { OrderService } from '../../services/order/order.service';
 import { CustomerService } from '../../services/customer/customer.service';
 import { Router } from '@angular/router';
 import { Customer } from '../../models/customer.model';
+import { CartService } from '../../services/addtocart/cart.service';
 
 @Component({
   selector: 'app-payment-success',
@@ -15,6 +16,7 @@ export class PaymentSuccessComponent implements OnInit {
     @Inject(PLATFORM_ID) private platformId: Object,
     private orderService: OrderService,
     private customerService: CustomerService,
+    private cartService: CartService,
     private router: Router
   ) {}
 
@@ -43,15 +45,47 @@ export class PaymentSuccessComponent implements OnInit {
               this.orderService.startPayment(orderId, grandTotal, paymentMethod).subscribe({
                 next: () => {
                   console.log('✅ Stripe order and payment completed.');
-                  this.router.navigate(['/orders']);
+                  // Clear cart after successful payment
+                  this.cartService.getCartItemsByCustomerId(customer.id).subscribe({
+                    next: (cartItems: any[]) => {
+                      if (cartItems.length > 0) {
+                        const cartId = cartItems[0].cartId; 
+                        this.cartService.clearCart(cartId).subscribe({
+                          next: () => {
+                            console.log('✅ Cart cleared after payment.');
+                            this.router.navigate(['/orders']);
+                          },
+                          error: (err: any) => {
+                            console.error('❌ Failed to clear cart', err);
+                            this.router.navigate(['/orders']);
+                          }
+                        });
+                      } else {
+                        this.router.navigate(['/orders']);
+                      }
+                    },
+                    error: (err: any) => {
+                      console.error('❌ Failed to get cart items', err);
+                      this.router.navigate(['/orders']);
+                    }
+                  });
                 },
-                error: err => console.error('❌ Payment error:', err)
+                error: (err: any) => {
+                  console.error('❌ Payment error:', err);
+                  this.router.navigate(['/orders']);
+                }
               });
             },
-            error: err => console.error('❌ Order error:', err)
+            error: (err: any) => {
+              console.error('❌ Order error:', err);
+              this.router.navigate(['/orders']);
+            }
           });
         },
-        error: err => console.error('❌ Customer info fetch failed:', err)
+        error: (err: any) => {
+          console.error('❌ Customer info fetch failed:', err);
+          this.router.navigate(['/orders']);
+        }
       });
     }
   }
