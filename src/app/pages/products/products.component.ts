@@ -5,8 +5,6 @@ import { CartService } from '../../services/addtocart/cart.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { Router } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
-import { CustomerService } from '../../services/customer/customer.service';
-import { Customer } from '../../models/customer.model';
 
 @Component({
   selector: 'app-products',
@@ -23,8 +21,7 @@ export class ProductsComponent implements OnInit {
     private api: ApiService,            
     private cartService: CartService,
     private authService: AuthService,
-    private router: Router,
-    private customerService: CustomerService
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -48,28 +45,17 @@ export class ProductsComponent implements OnInit {
       return;
     }
 
+    const userId = '2457c2b7-b9de-44c6-bbe1-0791fd0ca6ad'; // 🔁 To be dynamic later
     this.isAdding = true;
-    
-    this.customerService.getMyProfile().subscribe({
-      next: (data: Customer) => {
-        const userId = data.id?.value;
-        if (userId) {
-          this.cartService.addCartItem(userId, product).subscribe({
-            next: () => {
-              alert('✅ Item added to cart!');
-              this.isAdding = false;
-            },
-            error: (err) => {
-              console.error('❌ Add to cart failed', err);
-              alert('Failed to add item to cart.');
-              this.isAdding = false;
-            }
-          });
-          
-        }
+
+    this.cartService.addToCart(userId, product).subscribe({
+      next: () => {
+        alert('✅ Item added to cart!');
+        this.isAdding = false;
       },
       error: (err) => {
-        console.error('❌ Failed to get user profile', err);
+        console.error('❌ Add to cart failed', err);
+        alert('Failed to add item to cart.');
         this.isAdding = false;
       }
     });

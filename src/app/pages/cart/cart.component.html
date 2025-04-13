@@ -20,7 +20,7 @@
 
       <div class="d-flex align-items-center gap-2">
         <span class="fw-bold">${{ item.price * item.quantity }}</span>
-        <button class="btn btn-sm btn-outline-danger" (click)="removeItem(item)">
+        <button class="btn btn-sm btn-outline-danger" (click)="removeItem(item.productId)">
           <i class="bi bi-trash"></i>
         </button>
       </div>

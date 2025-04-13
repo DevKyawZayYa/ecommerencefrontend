@@ -75,6 +75,9 @@ export class CartComponent implements OnInit {
     return this.selectedItems.has(productId);
   }
 
+  removeItem(productId: string) {
+    alert('❌ Remove not yet wired to backend');
+  }
 
 
   checkout() {
@@ -86,25 +89,6 @@ export class CartComponent implements OnInit {
     // 🔁 Navigate to Checkout page
     this.router.navigate(['/checkout']);
   }
-
-  removeItem(item: any): void {
-    const cartItemId = item.id?.value || item.id;
-    this.cartService.deleteCartItem(cartItemId).subscribe({
-      next: () => {
-        this.items = this.items.filter((i: any) => (i.id?.value || i.id) !== cartItemId);
-        this.updateTotal();
-      },
-      error: (err) => {
-        console.error('❌ Failed to delete item', err);
-      }
-    });
-  }
-
-  updateTotal(): void {
-    this.total = this.items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
-  }
-  
-  
   
 }
 
