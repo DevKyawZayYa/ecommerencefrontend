@@ -23,7 +23,7 @@ export class PaymentSuccessComponent implements OnInit {
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       const items = JSON.parse(localStorage.getItem('selectedItems') || '[]');
-      const paymentMethod = 'Stripe';
+      const paymentMethod = localStorage.getItem('paymentMethod') || '';
       const shippingCost = 5.19;
       const total = items.reduce((sum: number, item: any) => sum + (item.price * item.quantity), 0);
       const grandTotal = total + shippingCost;
@@ -42,51 +42,66 @@ export class PaymentSuccessComponent implements OnInit {
           this.orderService.placeOrder(payload).subscribe({
             next: (res: any) => {
               const orderId = res?.value?.orderId ?? 'mock-id';
+              
               this.orderService.startPayment(orderId, grandTotal, paymentMethod).subscribe({
                 next: () => {
-                  console.log('✅ Stripe order and payment completed.');
-                  // Clear cart after successful payment
-                  this.cartService.getCartItemsByCustomerId(customer.id).subscribe({
-                    next: (cartItems: any[]) => {
-                      if (cartItems.length > 0) {
-                        const cartId = cartItems[0].cartId; 
-                        this.cartService.clearCart(cartId).subscribe({
-                          next: () => {
-                            console.log('✅ Cart cleared after payment.');
-                            this.router.navigate(['/orders']);
-                          },
-                          error: (err: any) => {
-                            console.error('❌ Failed to clear cart', err);
-                            this.router.navigate(['/orders']);
-                          }
-                        });
-                      } else {
-                        this.router.navigate(['/orders']);
-                      }
-                    },
-                    error: (err: any) => {
-                      console.error('❌ Failed to get cart items', err);
-                      this.router.navigate(['/orders']);
-                    }
-                  });
+                  console.log('✅ Order completed');
+                  
+                  // Only clear cart for Stripe payments
+                  if (paymentMethod === 'Stripe') {
+                    this.clearCartAndRedirect(customer.id);
+                  } else {
+                    // For COD, just redirect to products
+                    localStorage.removeItem('selectedItems');
+                    localStorage.removeItem('paymentMethod');
+                    this.router.navigate(['/products']);
+                  }
                 },
-                error: (err: any) => {
+                error: err => {
                   console.error('❌ Payment error:', err);
-                  this.router.navigate(['/orders']);
+                  this.router.navigate(['/products']);
                 }
               });
             },
-            error: (err: any) => {
+            error: err => {
               console.error('❌ Order error:', err);
-              this.router.navigate(['/orders']);
+              this.router.navigate(['/products']);
             }
           });
         },
-        error: (err: any) => {
+        error: err => {
           console.error('❌ Customer info fetch failed:', err);
-          this.router.navigate(['/orders']);
+          this.router.navigate(['/products']);
         }
       });
     }
+  }
+
+  private clearCartAndRedirect(customerId: string): void {
+    this.cartService.getCartItemsByCustomerId(customerId).subscribe({
+      next: (cartItems: any[]) => {
+        if (cartItems.length > 0) {
+          const shoppingCartId = cartItems[0].shoppingCartId;
+          this.cartService.clearCart(shoppingCartId).subscribe({
+            next: () => {
+              console.log('✅ Cart cleared after Stripe payment');
+              localStorage.removeItem('selectedItems');
+              localStorage.removeItem('paymentMethod');
+              this.router.navigate(['/orders']);
+            },
+            error: (err) => {
+              console.error('❌ Failed to clear cart', err);
+              this.router.navigate(['/orders']);
+            }
+          });
+        } else {
+          this.router.navigate(['/orders']);
+        }
+      },
+      error: (err) => {
+        console.error('❌ Failed to get cart items', err);
+        this.router.navigate(['/orders']);
+      }
+    });
   }
 }

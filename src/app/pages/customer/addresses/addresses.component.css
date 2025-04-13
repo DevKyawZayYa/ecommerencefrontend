@@ -76,61 +76,58 @@
   .edit-address-form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 15px;
   }
   
   .edit-address-form input,
   .edit-address-form textarea {
     width: 100%;
     padding: 8px 12px;
-    font-size: 0.95rem;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    border: 1px solid #ccc;
-    transition: border-color 0.2s;
-    background-color: #fff;
+    font-size: 14px;
   }
   
   .edit-address-form input:focus,
   .edit-address-form textarea:focus {
-    outline: none;
     border-color: #f44336;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(244, 67, 54, 0.1);
   }
   
   .edit-actions {
     display: flex;
+    justify-content: flex-end;
     gap: 10px;
-    margin-top: 8px;
+    margin-top: 20px;
   }
   
   .save-button {
-    background-color: #f44336;
+    background: #f44336;
     color: white;
     border: none;
-    padding: 8px 18px;
+    padding: 8px 20px;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.2s;
   }
   
   .save-button:hover {
-    background-color: #d32f2f;
+    background: #d32f2f;
   }
   
   .cancel-button {
-    background-color: #e0e0e0;
-    color: #333;
-    border: none;
-    padding: 8px 18px;
+    background: #fff;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 8px 20px;
     border-radius: 4px;
-    font-size: 0.9rem;
+    font-size: 14px;
     cursor: pointer;
-    transition: background-color 0.2s;
   }
   
   .cancel-button:hover {
-    background-color: #ccc;
+    background: #f5f5f5;
   }
   
   /* Make sure modal stays on top of other content */
@@ -142,5 +139,41 @@
   .profile-main, .profile-layout {
     position: relative;
     z-index: 1;
+  }
+  
+  /* Modal Styles */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 10000; 
+  }
+  
+  .modal-content h3 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    font-weight: 500;
+  }
+  
+  /* Prevent body scroll when modal is open */
+  body.modal-open {
+    overflow: hidden;
   }
   

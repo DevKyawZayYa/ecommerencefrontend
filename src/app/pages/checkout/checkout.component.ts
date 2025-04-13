@@ -6,6 +6,7 @@ import { ApiService } from '../../core/services/api.service';
 import { Customer } from '../../models/customer.model';
 import { CustomerService } from '../../services/customer/customer.service';
 import { OrderService } from '../../services/order/order.service';
+import { CartService } from '../../services/addtocart/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -31,7 +32,8 @@ export class CheckoutComponent implements OnInit {
     private api: ApiService,
     private router: Router,
     private customerService: CustomerService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -57,26 +59,62 @@ export class CheckoutComponent implements OnInit {
     return this.total + this.shippingCost;
   }
 
-  handlePlaceOrderClick(): void {
-    if (this.selectedPaymentMethod === 'CashOnDelivery') {
+  handlePlaceOrder(): void {
+    if (!this.selectedPaymentMethod) {
+      alert('Please select a payment method');
+      return;
+    }
+
+    if (this.selectedPaymentMethod === 'Stripe') {
+      this.startStripeCheckout();
+    } else {
+      // Handle COD
       const payload = this.orderService.buildOrderPayload(this.customer, this.items, this.shippingCost);
       this.orderService.placeOrder(payload).subscribe({
         next: (res: any) => {
           const orderId = res?.value?.orderId ?? 'mock-id';
-          this.orderService.startPayment(orderId, this.getGrandTotal(), this.selectedPaymentMethod).subscribe({
+          this.orderService.startPayment(orderId, this.getGrandTotal(), 'CashOnDelivery').subscribe({
             next: () => {
-              alert('✅ Order placed with COD!');
-              this.router.navigate(['/orders']);
+              alert('Order placed successfully ✅');
+              // Clear cart after successful COD order
+              if (this.customer.id) {
+                this.cartService.getCartItemsByCustomerId(this.customer.id).subscribe({
+                  next: (cartItems: any[]) => {
+                    if (cartItems.length > 0) {
+                      const shoppingCartId = cartItems[0].shoppingCartId;
+                      this.cartService.clearCart(shoppingCartId).subscribe({
+                        next: () => {
+                          console.log('✅ Cart cleared after COD order');
+                          localStorage.removeItem('selectedItems');
+                          this.router.navigate(['/products']);
+                        },
+                        error: (err) => {
+                          console.error('❌ Failed to clear cart', err);
+                          this.router.navigate(['/products']);
+                        }
+                      });
+                    } else {
+                      this.router.navigate(['/products']);
+                    }
+                  },
+                  error: (err) => {
+                    console.error('❌ Failed to get cart items', err);
+                    this.router.navigate(['/products']);
+                  }
+                });
+              }
             },
-            error: err => console.error('❌ COD payment error:', err)
+            error: (err) => {
+              console.error('❌ Payment error:', err);
+              alert('Failed to process payment ❌');
+            }
           });
         },
-        error: err => console.error('❌ Order creation error:', err)
+        error: (err) => {
+          console.error('❌ Order creation error:', err);
+          alert('Failed to create order ❌');
+        }
       });
-    } else if (this.selectedPaymentMethod === 'Stripe') {
-      this.startStripeCheckout();
-    } else {
-      alert('Please select a payment method');
     }
   }
 
@@ -93,7 +131,7 @@ export class CheckoutComponent implements OnInit {
       next: (res) => {
         if (res?.url) {
           localStorage.setItem('stripeSession', JSON.stringify(res));
-          localStorage.setItem('selectedItems', JSON.stringify(this.items)); // 🔐 store for reuse
+          localStorage.setItem('selectedItems', JSON.stringify(this.items));
           window.location.href = res.url;
         } else {
           alert('Failed to get Stripe URL');
