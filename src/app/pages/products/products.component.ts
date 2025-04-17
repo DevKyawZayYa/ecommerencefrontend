@@ -42,6 +42,11 @@ export class ProductsComponent implements OnInit {
     });
   }
 
+  goToDetail(id: string) {
+    console.log('🔍 Going to product detail for ID:', id);
+    this.router.navigate(['/product', id]);
+  }
+
   addToCart(product: Product): void {
     if (!this.authService.isLoggedInSync) {
       this.router.navigate(['/login']);

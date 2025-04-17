@@ -1,0 +1,59 @@
+<div class="shopee-product-container" *ngIf="product">
+  <div class="shopee-product-grid">
+    <!-- Left image and thumbnails -->
+    <div class="image-section">
+      <img [src]="mainImage || 'https://via.placeholder.com/400'" alt="{{ product.name }}" class="main-image" />
+      <div class="thumbnail-row">
+        <img *ngFor="let img of galleryImages"
+             [src]="img"
+             class="thumbnail"
+             [class.active]="img === mainImage"
+             (click)="mainImage = img" />
+      </div>
+    </div>
+
+    <!-- Right product details -->
+    <div class="info-section">
+      <h1 class="title">{{ product.name }}</h1>
+
+      <div class="rating">
+        ⭐ 4.6 <span class="rating-count">| 777 Ratings</span>
+      </div>
+
+      <div class="price-box">
+        <span class="price">RM{{ product.price.amount }}</span>
+        <span class="original-price" *ngIf="product.originalPrice">RM{{ product.originalPrice }}</span>
+      </div>
+
+      <div class="badges">
+        <span class="badge red">50% OFF</span>
+        <span class="badge">10% OFF</span>
+      </div>
+
+      <div class="info-row">
+        <strong>Shipping:</strong> Guaranteed to get by 24 Apr
+      </div>
+
+      <div class="info-row">
+        <strong>Color:</strong>
+        <div class="color-options">
+          <button *ngFor="let color of product.colors || ['Black']">{{ color }}</button>
+        </div>
+      </div>
+
+      <div class="info-row">
+        <strong>Quantity:</strong>
+        <div class="quantity-selector">
+          <button (click)="decreaseQty()">-</button>
+          <input type="text" [(ngModel)]="quantity" />
+          <button (click)="increaseQty()">+</button>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button class="add-to-cart" (click)="addToCart()">🛒 Add To Cart</button>
+        <button class="buy-now">Buy With Voucher RM{{ product.price.amount }}</button>
+      </div>
+    </div>
+  </div>
+</div>

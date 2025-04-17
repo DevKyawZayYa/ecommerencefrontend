@@ -1,7 +1,14 @@
 <div class="container my-5">  
   <div class="row row-cols-1 row-cols-md-5 g-4">
     <div class="col" *ngFor="let product of products">
-      <div class="card h-100">
+      <div class="card h-100" (click)="goToDetail(product.id.value)" style="cursor: pointer;">
+        <img
+        *ngIf="product.primaryImageUrl"
+        [src]="product.primaryImageUrl"
+        class="card-img-top"
+        alt="{{ product.name }}"
+        style="height: 200px; object-fit: cover;"
+      />
         <div class="card-body">
           <h5 class="card-title">{{ product.name }}</h5>
           <p class="card-text text-muted">{{ product.description }}</p>
@@ -9,8 +16,8 @@
           <small class="text-muted">SKU: {{ product.sku.value }}</small>
         </div>
         <div class="card-footer text-end">
-          <button class="btn btn-sm btn-primary" 
-                  (click)="addToCart(product)" 
+          <button class="btn btn-sm btn-primary"
+                  (click)="addToCart(product); $event.stopPropagation();"
                   [disabled]="isAdding">
             Add to Cart
           </button>

@@ -80,8 +80,15 @@ export const appRoutes: Routes = [
         canActivate: [AuthGuard],
         loadComponent: () =>
           import('./pages/order/order-detail/order-detail.component').then(m => m.OrderDetailComponent)
-      }      
-      
+      },
+      {
+        path: 'product/:id',
+        canActivate: [AuthGuard],
+        loadComponent: () =>
+          import('./pages/product-detail/product-detail.component').then(
+            (m) => m.ProductDetailComponent
+          ),
+      },  
     ],
   },
   {
