@@ -7,24 +7,47 @@
     
     <div
       *ngFor="let order of orders"
-      class="order-card clickable"
+      class="order-card"
       (click)="goToOrderDetail(order.orderId)">
       
       <div class="order-header">
-        <strong>Status:</strong> {{ order.status }} <br />
-        <strong>Delivery:</strong> {{ order.deliveryStatus }}
+        <div class="status-section">
+          <span class="badge" [ngClass]="{
+            'badge-warning': order.status === 'NotShipped',
+            'badge-success': order.status === 'Shipped',
+            'badge-info': order.status === 'Processing'
+          }">{{ order.status }}</span>
+          <span class="order-id">Order #{{ order.orderId }}</span>
+        </div>
+        <div class="delivery-status">
+          <i class="bi bi-truck"></i>
+          {{ order.deliveryStatus }}
+        </div>
       </div>
 
       <div class="order-items">
         <div *ngFor="let item of order.items" class="item-row">
-          🛍 <strong>{{ item.productName }}</strong> x{{ item.quantity }} - RM {{ item.price.toFixed(2) }}
+          <div class="item-image">
+            <img [src]="item.primaryImageUrl || 'assets/placeholder-image.jpg'"
+                 [alt]="item.productName"
+                 class="product-thumb">
+          </div>
+          <div class="item-details">
+            <strong>{{ item.productName }}</strong>
+            <div class="item-meta">
+              <span class="quantity">x{{ item.quantity }}</span>
+              <span class="price">RM {{ item.price.toFixed(2) }}</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="order-footer">
         <div class="total">
-          Total: RM {{ getOrderTotal(order) }}
+          <span class="total-label">Total:</span>
+          <span class="total-amount">RM {{ getOrderTotal(order) }}</span>
         </div>
+        <button class="btn-track">Track Order</button>
       </div>
     </div>
   </div>

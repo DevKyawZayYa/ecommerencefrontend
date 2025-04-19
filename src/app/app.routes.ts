@@ -5,6 +5,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { PaymentSuccessComponent } from './pages/payment-success/payment-success.component';
 import { PaymentCancelComponent } from './pages/payment-cancel/payment-cancel.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { RegisterComponent } from './pages/register/register.component';
 
 export const appRoutes: Routes = [
   {
@@ -95,4 +96,8 @@ export const appRoutes: Routes = [
     path: 'login',
     component: LoginComponent,
   },
+  {
+    path: 'register',
+    component: RegisterComponent
+  }
 ];

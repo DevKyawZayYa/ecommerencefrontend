@@ -6,6 +6,8 @@ import { CartService } from '../../services/addtocart/cart.service';
 import { CustomerService } from '../../services/customer/customer.service';
 import { Customer } from '../../models/customer.model';
 import { Subscription } from 'rxjs';
+import { CategoryService } from '../../services/category/category.service';
+import { Category } from '../../models/category.model';
 
 @Component({
   selector: 'app-layout',
@@ -24,9 +26,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
   cartCount = 0;
   private cartSubscription: Subscription;
 
+  categories: Category[] = [];
+  showCategoryMenu = false;
+
   constructor(
     private cartService: CartService,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private categoryService: CategoryService
   ) {
     // Subscribe to cart count changes
     this.cartSubscription = this.cartService.cartCount$.subscribe(
@@ -54,6 +60,8 @@ export class LayoutComponent implements OnInit, OnDestroy {
         console.error('❌ Failed to load user profile', err);
       }
     });
+
+    this.loadCategories();
   }
   
   ngOnDestroy(): void {
@@ -68,5 +76,20 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   toggleDropdown() {
     this.showMenu = !this.showMenu;
+  }
+
+  private loadCategories() {
+    this.categoryService.getCategories().subscribe({
+      next: (categories) => {
+        this.categories = categories;
+      },
+      error: (error) => {
+        console.error('Failed to load categories:', error);
+      }
+    });
+  }
+
+  toggleCategoryMenu() {
+    this.showCategoryMenu = !this.showCategoryMenu;
   }
 }

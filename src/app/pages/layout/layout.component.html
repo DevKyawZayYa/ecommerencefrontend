@@ -7,18 +7,25 @@
     <!-- Center Nav Links -->
     <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center nav-links">
       <a class="nav-link text-white px-3" href="#">Best-Selling Items</a>
-      <a class="nav-link text-white px-3" href="#">5-Star Rated</a>
-      <a class="nav-link text-white px-3" href="#">Aidilfitri Sale</a>
-      <a class="nav-link text-white px-3" href="#">New Arrivals</a>
+      <a class="nav-link text-white px-3" href="#">Men Fashion</a>
+      <a class="nav-link text-white px-3" href="#">Women Fashion</a>
+      <a class="nav-link text-white px-3" href="#">Electronics</a>
       <a class="nav-link text-white px-3" routerLink="/products">Products</a>
+     <!-- Categories Dropdown -->
 
-      <div class="dropdown">
-        <a class="nav-link text-white px-3 dropdown-toggle" href="#" data-bs-toggle="dropdown">Categories</a>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#">Fashion</a></li>
-          <li><a class="dropdown-item" href="#">Electronics</a></li>
-        </ul>
+     <div class="nav-item dropdown" (mouseover)="showCategoryMenu = true" (mouseleave)="showCategoryMenu = false">
+      <a class="nav-link dropdown-toggle" role="button">
+        Categories
+      </a>
+      <div class="dropdown-menu" [class.show]="showCategoryMenu">
+        <ng-container *ngFor="let category of categories">
+          <a class="dropdown-item" [routerLink]="['/products']" [queryParams]="{ category: category.id }">
+            {{ category.name }}
+          </a>
+        </ng-container>
       </div>
+    </div>
+ 
     </div>
 
     <!-- Search + Actions -->

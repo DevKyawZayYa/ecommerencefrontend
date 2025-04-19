@@ -1,9 +1,10 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { AuthResponse } from '../../models/auth-response.model';
+import { RegisterRequest } from '../../models/register.model';
 
 @Injectable({
   providedIn: 'root'
@@ -48,5 +49,9 @@ export class AuthService {
 
   get isLoggedInSync(): boolean {
     return this.hasToken();
+  }
+
+  register(request: RegisterRequest): Observable<any> {
+    return this.api.post('Onboarding/Register', request);
   }
 }
