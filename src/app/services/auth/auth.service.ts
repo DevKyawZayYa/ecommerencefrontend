@@ -51,7 +51,7 @@ export class AuthService {
     return this.hasToken();
   }
 
-  register(request: RegisterRequest): Observable<any> {
-    return this.api.post('Onboarding/Register', request);
+  register(request: RegisterRequest): Observable<string> {
+    return this.api.post<string>('Onboarding/Register', request, 'text');
   }
 }

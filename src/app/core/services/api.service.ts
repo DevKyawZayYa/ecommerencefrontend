@@ -10,8 +10,10 @@ export class ApiService {
     return this.http.get<T>(`${environment.apiUrl}/${url}`);
   }
 
-  post<T>(url: string, body: any) {
-    return this.http.post<T>(`${environment.apiUrl}/${url}`, body);
+  post<T>(url: string, body: any, responseType: 'json' | 'text' = 'json') {
+    return this.http.post<T>(`${environment.apiUrl}/${url}`, body, {
+      responseType: responseType as any
+    });
   }
 
   put<T>(url: string, body: any, responseType: 'json' | 'text' = 'json') {

@@ -112,4 +112,24 @@
     color: white;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   }
+
+.register-link {
+    margin-top: 15px;
+    color: #f0ffffde;
+    text-align: center;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #00ff88;
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 5px;
+    transition: all 0.3s ease;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+    color: #77ffc0;
+}
   

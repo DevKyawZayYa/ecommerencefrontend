@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
@@ -54,12 +54,19 @@ export class RegisterComponent {
       const { confirmPassword, ...registerData } = formData;
       
       this.authService.register(registerData).subscribe({
-        next: () => {
-          this.toast.success('Registration successful! Please login.');
-          this.router.navigate(['/login']);
+        next: (response: string) => {
+          console.log('Registration successful:', response);
+          this.toast.success(response || 'Registration successful! Please login.');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 1000);
         },
         error: (error) => {
-          this.toast.error(error.message || 'Registration failed');
+          console.error('Registration error:', error);
+          this.toast.error(error?.error || error?.message || 'Registration failed');
+          this.isLoading = false;
+        },
+        complete: () => {
           this.isLoading = false;
         }
       });
