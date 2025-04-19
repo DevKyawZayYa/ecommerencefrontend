@@ -12,9 +12,29 @@
                [checked]="isChecked(item.productId)"
                (change)="onCheckboxChange($event, item.productId)" />
 
+        <!-- Product Image -->
+        <img [src]="item.primaryImageUrl || 'assets/placeholder-image.jpg'"
+             [alt]="item.name"
+             class="product-thumbnail"
+             style="width: 80px; height: 80px; object-fit: cover; border-radius: 4px;" />
+
         <div>
           <strong>{{ item.name }}</strong><br>
           <small>${{ item.price }} × {{ item.quantity }}</small>
+          
+          <!-- Quantity Controls -->
+          <div class="quantity-controls mt-2">
+            <button class="btn btn-sm btn-outline-secondary" 
+                    (click)="decreaseQty(item)"
+                    [disabled]="item.quantity <= 1">
+              -
+            </button>
+            <span class="mx-2">{{ item.quantity }}</span>
+            <button class="btn btn-sm btn-outline-secondary" 
+                    (click)="increaseQty(item)">
+              +
+            </button>
+          </div>
         </div>
       </div>
 

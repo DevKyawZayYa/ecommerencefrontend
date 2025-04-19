@@ -2,22 +2,25 @@ import { Component, Inject, PLATFORM_ID, OnInit } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { OrderService } from '../../services/order/order.service';
 import { CustomerService } from '../../services/customer/customer.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Customer } from '../../models/customer.model';
 import { CartService } from '../../services/addtocart/cart.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-payment-success',
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './payment-success.component.html',
   styleUrls: ['./payment-success.component.css']
 })
 export class PaymentSuccessComponent implements OnInit {
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
+    public router: Router,
     private orderService: OrderService,
     private customerService: CustomerService,
     private cartService: CartService,
-    private router: Router
+    @Inject(PLATFORM_ID) private platformId: any
   ) {}
 
   ngOnInit() {

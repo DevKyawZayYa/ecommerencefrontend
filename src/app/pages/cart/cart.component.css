@@ -1,0 +1,23 @@
+.product-thumbnail {
+  border: 1px solid #eee;
+  transition: transform 0.2s;
+}
+
+.product-thumbnail:hover {
+  transform: scale(1.05);
+}
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-controls button {
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+}
+
+.quantity-controls span {
+  min-width: 2rem;
+  text-align: center;
+}

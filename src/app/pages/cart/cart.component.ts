@@ -4,6 +4,7 @@ import { CartService } from '../../services/addtocart/cart.service';
 import { Router } from '@angular/router';
 import { Customer } from '../../models/customer.model';
 import { CustomerService } from '../../services/customer/customer.service';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     private router: Router,
     private customerService: CustomerService,
+    private toast: ToastrService
   )
   
     {}
@@ -104,8 +106,45 @@ export class CartComponent implements OnInit {
     this.total = this.items.reduce((sum: number, item: any) => sum + item.price * item.quantity, 0);
   }
   
-  
-  
+  increaseQty(item: any): void {
+    item.quantity++;
+    this.updateItemQuantity(item);
+  }
+
+  decreaseQty(item: any): void {
+    if (item.quantity > 1) {
+      item.quantity--;
+      this.updateItemQuantity(item);
+    }
+  }
+
+  updateItemQuantity(item: any): void {
+    const cartItemId = item.id?.value || item.id;
+    this.customerService.getMyProfile().subscribe({
+      next: (data: Customer) => {
+        const userId = data.id?.value;
+        if (userId) {
+          this.cartService.addCartItem(userId, {
+            ...item,
+            id: { value: item.productId }
+          }).subscribe({
+            next: () => {
+              this.updateTotal();
+              this.toast.success('Cart Updated', `${item.name} (Qty: ${item.quantity})`);
+            },
+            error: (err) => {
+              console.error('Failed to update cart', err);
+              this.toast.error('Unable to Update Cart', 'Please try again later');
+            }
+          });
+        }
+      },
+      error: (err) => {
+        console.error('Failed to get user profile', err);
+        this.toast.error('Unable to Update Cart', 'Please try again later');
+      }
+    });
+  }
 }
 
   

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { CustomerService } from '../../services/customer/customer.service';
 import { Customer } from '../../models/customer.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-products',
@@ -24,7 +25,8 @@ export class ProductsComponent implements OnInit {
     private cartService: CartService,
     private authService: AuthService,
     private router: Router,
-    private customerService: CustomerService
+    private customerService: CustomerService,
+    private toast: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -59,18 +61,29 @@ export class ProductsComponent implements OnInit {
       next: (data: Customer) => {
         const userId = data.id?.value;
         if (userId) {
+          // Store userId in localStorage for cart service
+          localStorage.setItem('userId', userId);
+
           this.cartService.addCartItem(userId, product).subscribe({
             next: () => {
-              alert('✅ Item added to cart!');
+              // Force update cart count after adding item
+              this.cartService.getCartItemsByCustomerId(userId).subscribe({
+                next: (cartItems) => {
+                  const count = cartItems?.[0]?.items?.length || 0;
+                  // Update the cart count in the service
+                  this.cartService.updateCartCount(count);
+                }
+              });
+              
+              this.toast.success('Added to Cart', `${product.name} (Qty: 1)`);
               this.isAdding = false;
             },
             error: (err) => {
-              console.error('❌ Add to cart failed', err);
-              alert('Failed to add item to cart.');
+              console.error('Failed to add to cart', err);
+              this.toast.error('Unable to Add Item', 'Please try again later');
               this.isAdding = false;
             }
-          });
-          
+          });     
         }
       },
       error: (err) => {
