@@ -43,7 +43,35 @@ export class ProductsComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.currentCategory = params['category'];
       this.currentPage = Number(params['page']) || 1;
-      this.fetchProducts();
+      
+      // Check if we have search parameters
+      if (params['Name'] || params['MinPrice']) {
+        // Build query parameters for search
+        const queryParams = new URLSearchParams();
+        queryParams.append('page', this.currentPage.toString());
+        queryParams.append('pageSize', this.pageSize.toString());
+        
+        if (params['Name']) {
+          queryParams.append('Name', params['Name']);
+        }
+        if (params['MinPrice']) {
+          queryParams.append('MinPrice', params['MinPrice']);
+        }
+        if (params['MaxPrice']) {
+          queryParams.append('MaxPrice', params['MaxPrice']);
+        }
+        if (this.currentCategory) {
+          queryParams.append('CategoryId', this.currentCategory);
+        }
+        if (params['SortBy']) {
+          queryParams.append('SortBy', params['SortBy']);
+        }
+        
+        this.fetchProductsBySearch(queryParams);
+      } else {
+        // Use original category/products endpoint
+        this.fetchProducts();
+      }
     });
   }
 
@@ -79,6 +107,25 @@ export class ProductsComponent implements OnInit {
         }
       });
     }
+  }
+
+  fetchProductsBySearch(queryParams: URLSearchParams): void {
+    this.loading = true;
+    
+    // Use the search endpoint with query parameters
+    this.api.get<ProductResponse>(`Products/search?${queryParams.toString()}`).subscribe({
+      next: (res) => {
+        // The search response already matches our Product interface structure
+        this.products = res.items;
+        this.totalItems = res.totalItems;
+        this.loading = false;
+      },
+      error: (err) => {
+        console.error('Failed to fetch products', err);
+        this.toast.error('Failed to load products');
+        this.loading = false;
+      }
+    });
   }
 
   onPageChange(page: number): void {

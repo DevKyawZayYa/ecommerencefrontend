@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, OnDestroy } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/addtocart/cart.service';
@@ -8,16 +8,21 @@ import { Customer } from '../../models/customer.model';
 import { Subscription } from 'rxjs';
 import { CategoryService } from '../../services/category/category.service';
 import { Category } from '../../models/category.model';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.css']
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   authService = inject(AuthService);
+  private router = inject(Router);
+  private categoryService = inject(CategoryService);
+  private route = inject(ActivatedRoute);
   isLoggedIn$ = this.authService.isLoggedIn();
   showMenu = false;
   username = 'kyawzayya656'; 
@@ -28,11 +33,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   categories: Category[] = [];
   showCategoryMenu = false;
+  searchQuery: string = '';
+  minPrice: number = 10;
 
   constructor(
     private cartService: CartService,
-    private customerService: CustomerService,
-    private categoryService: CategoryService
+    private customerService: CustomerService
   ) {
     // Subscribe to cart count changes
     this.cartSubscription = this.cartService.cartCount$.subscribe(
@@ -91,5 +97,33 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   toggleCategoryMenu() {
     this.showCategoryMenu = !this.showCategoryMenu;
+  }
+
+  onSearch(event: Event): void {
+    event.preventDefault();
+    
+    // Get current route parameters to preserve them
+    this.route.queryParams.subscribe(params => {
+      const queryParams: any = {};
+      
+      // Preserve existing category if present
+      if (params['category']) {
+        queryParams.category = params['category'];
+      }
+      
+      // Add search parameters
+      if (this.searchQuery) {
+        queryParams.Name = this.searchQuery;
+      }
+      
+      // Add MinPrice parameter
+      queryParams.MinPrice = this.minPrice;
+      
+      // Navigate with merged parameters
+      this.router.navigate(['/products'], { 
+        queryParams,
+        queryParamsHandling: 'merge' // This will preserve other query params
+      });
+    }).unsubscribe(); // Unsubscribe immediately since we only need the current value
   }
 }
