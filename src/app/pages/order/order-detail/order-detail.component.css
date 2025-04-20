@@ -26,6 +26,7 @@
 .item-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 10px 0;
   border-bottom: 1px dashed #ccc;
 }
@@ -51,4 +52,20 @@
   color: #d60000;
   border-top: 1px solid #eee;
   padding-top: 10px;
+}
+
+.product-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #eee;
+}
+
+.gap-3 {
+  gap: 1rem;
+}
+
+.text-muted {
+  color: #6c757d;
 }

@@ -32,10 +32,10 @@ export class OrderService {
     const paymentPayload = {
       orderId,
       amount,
-      paymentMethod,
-      paymentStatus: 'Paid',
-      transactionId: 'TXN_' + Date.now(),
-      transactionType: 'Online'
+      paymentMethod: paymentMethod === 'CashOnDelivery' ? 'COD' : 'Stripe',
+      paymentStatus: paymentMethod === 'CashOnDelivery' ? 'Pending' : 'Paid',
+      transactionId: paymentMethod === 'CashOnDelivery' ? 'COD_' + Date.now() : 'TXN_' + Date.now(),
+      transactionType: paymentMethod === 'CashOnDelivery' ? 'COD' : 'Online'
     };
     return this.api.post('payment', paymentPayload);
   }

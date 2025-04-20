@@ -6,6 +6,7 @@ import { ApiService } from '../../core/services/api.service';
 import { Customer } from '../../models/customer.model';
 import { CustomerService } from '../../services/customer/customer.service';
 import { OrderService } from '../../services/order/order.service';
+import { CartService } from '../../services/addtocart/cart.service';
 
 @Component({
   selector: 'app-checkout',
@@ -31,7 +32,8 @@ export class CheckoutComponent implements OnInit {
     private api: ApiService,
     private router: Router,
     private customerService: CustomerService,
-    private orderService: OrderService
+    private orderService: OrderService,
+    private cartService: CartService
   ) {}
 
   ngOnInit(): void {
@@ -63,15 +65,46 @@ export class CheckoutComponent implements OnInit {
       this.orderService.placeOrder(payload).subscribe({
         next: (res: any) => {
           const orderId = res?.value?.orderId ?? 'mock-id';
-          this.orderService.startPayment(orderId, this.getGrandTotal(), this.selectedPaymentMethod).subscribe({
+          this.orderService.startPayment(orderId, this.getGrandTotal(), 'CashOnDelivery').subscribe({
             next: () => {
-              alert('✅ Order placed with COD!');
-              this.router.navigate(['/orders']);
+              this.cartService.getCartItemsByCustomerId(this.customer.id).subscribe({
+                next: (cartItems: any[]) => {
+                  if (cartItems.length > 0) {
+                    const cartId = cartItems[0].cartId;
+                    this.cartService.clearCart(cartId).subscribe({
+                      next: () => {
+                        console.log('✅ Cart cleared after COD order.');
+                        alert('✅ Order placed successfully! Thank you for your order. You will pay on delivery.');
+                        this.router.navigate(['/products']);
+                      },
+                      error: (err: Error) => {
+                        console.error('❌ Failed to clear cart', err);
+                        alert('✅ Order placed successfully! Thank you for your order. You will pay on delivery.');
+                        this.router.navigate(['/products']);
+                      }
+                    });
+                  } else {
+                    alert('✅ Order placed successfully! Thank you for your order. You will pay on delivery.');
+                    this.router.navigate(['/products']);
+                  }
+                },
+                error: (err: Error) => {
+                  console.error('❌ Failed to get cart items', err);
+                  alert('✅ Order placed successfully! Thank you for your order. You will pay on delivery.');
+                  this.router.navigate(['/products']);
+                }
+              });
             },
-            error: err => console.error('❌ COD payment error:', err)
+            error: (err: Error) => {
+              console.error('❌ COD payment error:', err);
+              alert('Failed to place order. Please try again.');
+            }
           });
         },
-        error: err => console.error('❌ Order creation error:', err)
+        error: (err: Error) => {
+          console.error('❌ Order creation error:', err);
+          alert('Failed to create order. Please try again.');
+        }
       });
     } else if (this.selectedPaymentMethod === 'Stripe') {
       this.startStripeCheckout();
@@ -93,7 +126,7 @@ export class CheckoutComponent implements OnInit {
       next: (res) => {
         if (res?.url) {
           localStorage.setItem('stripeSession', JSON.stringify(res));
-          localStorage.setItem('selectedItems', JSON.stringify(this.items)); // 🔐 store for reuse
+          localStorage.setItem('selectedItems', JSON.stringify(this.items));
           window.location.href = res.url;
         } else {
           alert('Failed to get Stripe URL');
