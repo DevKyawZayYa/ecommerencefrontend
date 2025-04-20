@@ -3,7 +3,7 @@ import { Product, ProductResponse } from '../../models/product.model';
 import { CommonModule } from '@angular/common';
 import { CartService } from '../../services/addtocart/cart.service';
 import { AuthService } from '../../services/auth/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
 import { CustomerService } from '../../services/customer/customer.service';
 import { Customer } from '../../models/customer.model';
@@ -19,29 +19,105 @@ import { ToastrService } from 'ngx-toastr';
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
   isAdding: boolean = false;
+  currentCategory: string | null = null;
+  Math = Math;
+  
+  // Pagination properties
+  currentPage = 1;
+  pageSize = 10;
+  totalItems = 0;
+  loading = false;
 
   constructor(
     private api: ApiService,            
     private cartService: CartService,
     private authService: AuthService,
     private router: Router,
+    private route: ActivatedRoute,
     private customerService: CustomerService,
     private toast: ToastrService
   ) {}
 
   ngOnInit(): void {
-    this.fetchProducts();
+    // Subscribe to query params changes
+    this.route.queryParams.subscribe(params => {
+      this.currentCategory = params['category'];
+      this.currentPage = Number(params['page']) || 1;
+      this.fetchProducts();
+    });
   }
 
   fetchProducts(): void {
-    this.api.get<ProductResponse>('products?page=1&pageSize=50').subscribe({
-      next: (res) => {
-        this.products = res.items;
-      },
-      error: (err) => {
-        console.error('Failed to fetch products', err);
-      }
-    });
+    this.loading = true;
+    
+    if (this.currentCategory) {
+      // Use category-specific endpoint
+      this.api.get<ProductResponse>(`Products/category/${this.currentCategory}?page=${this.currentPage}&pageSize=${this.pageSize}`).subscribe({
+        next: (res) => {
+          this.products = res.items;
+          this.totalItems = res.totalItems;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Failed to fetch products', err);
+          this.toast.error('Failed to load products');
+          this.loading = false;
+        }
+      });
+    } else {
+      // Use default products endpoint
+      this.api.get<ProductResponse>(`products?page=${this.currentPage}&pageSize=${this.pageSize}`).subscribe({
+        next: (res) => {
+          this.products = res.items;
+          this.totalItems = res.totalItems;
+          this.loading = false;
+        },
+        error: (err) => {
+          console.error('Failed to fetch products', err);
+          this.toast.error('Failed to load products');
+          this.loading = false;
+        }
+      });
+    }
+  }
+
+  onPageChange(page: number): void {
+    if (page !== this.currentPage && page >= 1 && page <= this.getTotalPages()) {
+      this.currentPage = page;
+      // Update URL with new page number
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { 
+          page: this.currentPage,
+          ...(this.currentCategory && { category: this.currentCategory })
+        },
+        queryParamsHandling: 'merge'
+      });
+    }
+  }
+
+  getTotalPages(): number {
+    return Math.ceil(this.totalItems / this.pageSize);
+  }
+
+  getPageNumbers(): number[] {
+    const totalPages = this.getTotalPages();
+    const currentPage = this.currentPage;
+    const pages: number[] = [];
+    
+    // Always show first page
+    pages.push(1);
+    
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pages.push(i);
+    }
+    
+    // Always show last page
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+    
+    return [...new Set(pages)].sort((a, b) => a - b);
   }
 
   goToDetail(id: string) {
