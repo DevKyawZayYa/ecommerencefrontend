@@ -8,16 +8,32 @@
         <div class="card-login">
             <h1>Login</h1>
             <div class="textfield">
-              <label for="email">email</label>
-              <input id="email" formControlName="email" type="text" />
+              <label for="email">Email</label>
+              <input 
+                id="email" 
+                formControlName="email" 
+                type="email"
+                [class.is-invalid]="loginForm.get('email')?.touched && loginForm.get('email')?.invalid"
+              />
+              <div class="invalid-feedback" *ngIf="loginForm.get('email')?.touched">
+                {{ getErrorMessage('email') }}
+              </div>
             </div>
 
             <div class="textfield">
               <label for="password">Password</label>
-              <input id="password" formControlName="password" type="password" />
+              <input 
+                id="password" 
+                formControlName="password" 
+                type="password"
+                [class.is-invalid]="loginForm.get('password')?.touched && loginForm.get('password')?.invalid"
+              />
+              <div class="invalid-feedback" *ngIf="loginForm.get('password')?.touched">
+                {{ getErrorMessage('password') }}
+              </div>
             </div>
 
-            <button class="btn-login" type="submit">Log In</button>
+            <button class="btn-login" type="submit" [disabled]="loginForm.invalid">Log In</button>
             <div class="register-link">
               <span>If you are not a user, </span>
               <a routerLink="/register">Register</a>

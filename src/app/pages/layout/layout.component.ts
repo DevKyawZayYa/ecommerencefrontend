@@ -25,7 +25,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   private route = inject(ActivatedRoute);
   isLoggedIn$ = this.authService.isLoggedIn();
   showMenu = false;
-  username = 'kyawzayya656'; 
+  username = '';
   isLoggedIn = true;
 
   cartCount = 0;
@@ -50,6 +50,9 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.customerService.getMyProfile().subscribe({
       next: (data: Customer) => {
         const customerId = data.id?.value;
+        // Set the username from profile data
+        this.username = `${data.firstName?.value || ''} ${data.lastName?.value || ''}`.trim();
+        
         if (customerId) {
           localStorage.setItem('userId', customerId); // Store userId for cart service
           this.cartService.getCartItemsByCustomerId(customerId).subscribe({
@@ -78,7 +81,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
   onLogout() {
     this.authService.logout();
-  } 
+  }
 
   toggleDropdown() {
     this.showMenu = !this.showMenu;
@@ -99,31 +102,12 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.showCategoryMenu = !this.showCategoryMenu;
   }
 
-  onSearch(event: Event): void {
+  onSearch(event: Event) {
     event.preventDefault();
-    
-    // Get current route parameters to preserve them
-    this.route.queryParams.subscribe(params => {
-      const queryParams: any = {};
-      
-      // Preserve existing category if present
-      if (params['category']) {
-        queryParams.category = params['category'];
-      }
-      
-      // Add search parameters
-      if (this.searchQuery) {
-        queryParams.Name = this.searchQuery;
-      }
-      
-      // Add MinPrice parameter
-      queryParams.MinPrice = this.minPrice;
-      
-      // Navigate with merged parameters
-      this.router.navigate(['/products'], { 
-        queryParams,
-        queryParamsHandling: 'merge' // This will preserve other query params
+    if (this.searchQuery.trim()) {
+      this.router.navigate(['/products'], {
+        queryParams: { search: this.searchQuery.trim() }
       });
-    }).unsubscribe(); // Unsubscribe immediately since we only need the current value
+    }
   }
 }

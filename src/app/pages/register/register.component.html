@@ -9,14 +9,18 @@
             <label class="form-label">First Name</label>
             <input type="text" class="form-control" formControlName="firstName"
                    [class.is-invalid]="registerForm.get('firstName')?.touched && registerForm.get('firstName')?.invalid">
-            <div class="invalid-feedback">First name is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('firstName')?.touched">
+              {{ getErrorMessage('firstName') }}
+            </div>
           </div>
   
           <div class="col-md-6 mb-3">
             <label class="form-label">Last Name</label>
             <input type="text" class="form-control" formControlName="lastName"
                    [class.is-invalid]="registerForm.get('lastName')?.touched && registerForm.get('lastName')?.invalid">
-            <div class="invalid-feedback">Last name is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('lastName')?.touched">
+              {{ getErrorMessage('lastName') }}
+            </div>
           </div>
   
           <!-- Contact Information -->
@@ -24,19 +28,27 @@
             <label class="form-label">Email</label>
             <input type="email" class="form-control" formControlName="email"
                    [class.is-invalid]="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
-            <div class="invalid-feedback">Please enter a valid email</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('email')?.touched">
+              {{ getErrorMessage('email') }}
+            </div>
           </div>
   
           <div class="col-md-4 mb-3">
             <label class="form-label">Mobile Code</label>
-            <input type="text" class="form-control" formControlName="mobileCode">
+            <input type="text" class="form-control" formControlName="mobileCode"
+                   [class.is-invalid]="registerForm.get('mobileCode')?.touched && registerForm.get('mobileCode')?.invalid">
+            <div class="invalid-feedback" *ngIf="registerForm.get('mobileCode')?.touched">
+              {{ getErrorMessage('mobileCode') }}
+            </div>
           </div>
   
           <div class="col-md-8 mb-3">
             <label class="form-label">Mobile Number</label>
             <input type="text" class="form-control" formControlName="mobileNumber"
                    [class.is-invalid]="registerForm.get('mobileNumber')?.touched && registerForm.get('mobileNumber')?.invalid">
-            <div class="invalid-feedback">Mobile number is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('mobileNumber')?.touched">
+              {{ getErrorMessage('mobileNumber') }}
+            </div>
           </div>
   
           <!-- Address Information -->
@@ -44,35 +56,45 @@
             <label class="form-label">Address</label>
             <input type="text" class="form-control" formControlName="address"
                    [class.is-invalid]="registerForm.get('address')?.touched && registerForm.get('address')?.invalid">
-            <div class="invalid-feedback">Address is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('address')?.touched">
+              {{ getErrorMessage('address') }}
+            </div>
           </div>
   
           <div class="col-md-6 mb-3">
             <label class="form-label">City</label>
             <input type="text" class="form-control" formControlName="city"
                    [class.is-invalid]="registerForm.get('city')?.touched && registerForm.get('city')?.invalid">
-            <div class="invalid-feedback">City is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('city')?.touched">
+              {{ getErrorMessage('city') }}
+            </div>
           </div>
   
           <div class="col-md-6 mb-3">
             <label class="form-label">Region/State</label>
             <input type="text" class="form-control" formControlName="region"
                    [class.is-invalid]="registerForm.get('region')?.touched && registerForm.get('region')?.invalid">
-            <div class="invalid-feedback">Region is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('region')?.touched">
+              {{ getErrorMessage('region') }}
+            </div>
           </div>
   
           <div class="col-md-6 mb-3">
             <label class="form-label">Postal Code</label>
             <input type="text" class="form-control" formControlName="postalCode"
                    [class.is-invalid]="registerForm.get('postalCode')?.touched && registerForm.get('postalCode')?.invalid">
-            <div class="invalid-feedback">Postal code is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('postalCode')?.touched">
+              {{ getErrorMessage('postalCode') }}
+            </div>
           </div>
   
           <div class="col-md-6 mb-3">
             <label class="form-label">Country</label>
             <input type="text" class="form-control" formControlName="country"
                    [class.is-invalid]="registerForm.get('country')?.touched && registerForm.get('country')?.invalid">
-            <div class="invalid-feedback">Country is required</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('country')?.touched">
+              {{ getErrorMessage('country') }}
+            </div>
           </div>
   
           <!-- Password -->
@@ -80,14 +102,18 @@
             <label class="form-label">Password</label>
             <input type="password" class="form-control" formControlName="password"
                    [class.is-invalid]="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
-            <div class="invalid-feedback">Password must be at least 6 characters</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('password')?.touched">
+              {{ getErrorMessage('password') }}
+            </div>
           </div>
   
           <div class="col-md-6 mb-3">
             <label class="form-label">Confirm Password</label>
             <input type="password" class="form-control" formControlName="confirmPassword"
                    [class.is-invalid]="registerForm.get('confirmPassword')?.touched && registerForm.errors?.['mismatch']">
-            <div class="invalid-feedback">Passwords do not match</div>
+            <div class="invalid-feedback" *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.errors?.['mismatch']">
+              {{ getErrorMessage('confirmPassword') }}
+            </div>
           </div>
         </div>
   

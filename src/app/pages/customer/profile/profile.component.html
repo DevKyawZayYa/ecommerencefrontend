@@ -13,24 +13,45 @@
       <div class="profile-content">
         <!-- LEFT: Profile Form -->
         <form [formGroup]="profileForm" class="profile-form">
-
           <div class="form-group">
             <label>Name</label>
             <div class="field-inline">
               <ng-container *ngIf="!editMode.name; else editName">
                 <input
-                  [value]="profileForm.get('firstName')?.value + ' ' + profileForm.get('lastName')?.value"
+                  [value]="(profileForm.get('firstName')?.value || '') + ' ' + (profileForm.get('lastName')?.value || '')"
                   readonly
                   class="readonly"
+                  [class.is-invalid]="(profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched) || 
+                                    (profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched)"
                 />
                 <a (click)="editMode.name = true" class="action-link">Change</a>
               </ng-container>
 
               <ng-template #editName>
                 <div class="field-inline" style="gap: 8px;">
-                  <input formControlName="firstName" placeholder="First Name" />
-                  <input formControlName="lastName" placeholder="Last Name" />
-                  <a (click)="editMode.name = false" class="action-link cancel">Cancel</a>
+                  <div class="input-group">
+                    <input 
+                      formControlName="firstName" 
+                      placeholder="First Name"
+                      [class.is-invalid]="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched"
+                    />
+                    <div class="invalid-feedback" *ngIf="profileForm.get('firstName')?.touched">
+                      {{ getErrorMessage('firstName') }}
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <input 
+                      formControlName="lastName" 
+                      placeholder="Last Name"
+                      [class.is-invalid]="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched"
+                    />
+                    <div class="invalid-feedback" *ngIf="profileForm.get('lastName')?.touched">
+                      {{ getErrorMessage('lastName') }}
+                    </div>
+                  </div>
+                  <div class="action-buttons">
+                    <a (click)="cancelEdit('name')" class="action-link cancel">Cancel</a>
+                  </div>
                 </div>
               </ng-template>
             </div>
@@ -40,13 +61,27 @@
             <label>Email</label>
             <div class="field-inline">
               <ng-container *ngIf="!editMode.email; else editEmail">
-                <input formControlName="email" readonly class="readonly" />
+                <input 
+                  formControlName="email" 
+                  readonly 
+                  class="readonly"
+                  [class.is-invalid]="profileForm.get('email')?.invalid && profileForm.get('email')?.touched"
+                />
                 <a (click)="editMode.email = true" class="action-link">Change</a>
               </ng-container>
 
               <ng-template #editEmail>
-                <input formControlName="email" class="editable" />
-                <a (click)="editMode.email = false" class="action-link cancel">Cancel</a>
+                <div class="input-group flex-grow-1">
+                  <input 
+                    formControlName="email" 
+                    class="editable"
+                    [class.is-invalid]="profileForm.get('email')?.invalid && profileForm.get('email')?.touched"
+                  />
+                  <div class="invalid-feedback" *ngIf="profileForm.get('email')?.touched">
+                    {{ getErrorMessage('email') }}
+                  </div>
+                </div>
+                <a (click)="cancelEdit('email')" class="action-link cancel">Cancel</a>
               </ng-template>
             </div>
           </div>
@@ -55,14 +90,39 @@
             <label>Phone Number</label>
             <div class="field-inline">
               <ng-container *ngIf="!editMode.phone; else editPhone">
-                <input [value]="profileForm.get('mobileCode')?.value + ' ' + profileForm.get('mobileNumber')?.value" readonly class="readonly" />
+                <input 
+                  [value]="(profileForm.get('mobileCode')?.value || '') + ' ' + (profileForm.get('mobileNumber')?.value || '')" 
+                  readonly 
+                  class="readonly"
+                  [class.is-invalid]="(profileForm.get('mobileCode')?.invalid && profileForm.get('mobileCode')?.touched) ||
+                                    (profileForm.get('mobileNumber')?.invalid && profileForm.get('mobileNumber')?.touched)"
+                />
                 <a (click)="editMode.phone = true" class="action-link">Change</a>
               </ng-container>
 
               <ng-template #editPhone>
-                <input formControlName="mobileCode" style="width: 60px;" />
-                <input formControlName="mobileNumber" />
-                <a (click)="editMode.phone = false" class="action-link cancel">Cancel</a>
+                <div class="field-inline flex-grow-1" style="gap: 8px;">
+                  <div class="input-group" style="width: 100px;">
+                    <input 
+                      formControlName="mobileCode" 
+                      style="width: 100%;"
+                      [class.is-invalid]="profileForm.get('mobileCode')?.invalid && profileForm.get('mobileCode')?.touched"
+                    />
+                    <div class="invalid-feedback" *ngIf="profileForm.get('mobileCode')?.touched">
+                      {{ getErrorMessage('mobileCode') }}
+                    </div>
+                  </div>
+                  <div class="input-group flex-grow-1">
+                    <input 
+                      formControlName="mobileNumber"
+                      [class.is-invalid]="profileForm.get('mobileNumber')?.invalid && profileForm.get('mobileNumber')?.touched"
+                    />
+                    <div class="invalid-feedback" *ngIf="profileForm.get('mobileNumber')?.touched">
+                      {{ getErrorMessage('mobileNumber') }}
+                    </div>
+                  </div>
+                </div>
+                <a (click)="cancelEdit('phone')" class="action-link cancel">Cancel</a>
               </ng-template>
             </div>
           </div>
@@ -71,10 +131,20 @@
             <label>Gender</label>
             <div class="radio-group">
               <label>
-                <input type="radio" formControlName="gender" value="Male" (change)="profileForm.markAsDirty()" /> Male
+                <input 
+                  type="radio" 
+                  formControlName="gender" 
+                  value="Male" 
+                  (change)="profileForm.markAsDirty()" 
+                /> Male
               </label>
               <label>
-                <input type="radio" formControlName="gender" value="Female" (change)="profileForm.markAsDirty()" /> Female
+                <input 
+                  type="radio" 
+                  formControlName="gender" 
+                  value="Female" 
+                  (change)="profileForm.markAsDirty()" 
+                /> Female
               </label>
             </div>
           </div>
@@ -88,8 +158,8 @@
               </ng-container>
 
               <ng-template #editDob>
-                <input type="date" formControlName="dob" />
-                <a (click)="editMode.dob = false" class="action-link cancel">Cancel</a>
+                <input type="date" formControlName="dob" class="editable" />
+                <a (click)="cancelEdit('dob')" class="action-link cancel">Cancel</a>
               </ng-template>
             </div>
           </div>
@@ -106,7 +176,11 @@
 
         <!-- RIGHT: Avatar Upload -->
         <div class="profile-avatar">
-          <img src="https://via.placeholder.com/100" alt="Avatar" />
+          <img [src]="'https://ui-avatars.com/api/?name=' + 
+                      (profileForm.get('firstName')?.value || '') + '+' + 
+                      (profileForm.get('lastName')?.value || '') + 
+                      '&background=random'" 
+               alt="Avatar" />
           <button class="upload-button">Select Image</button>
           <small>File size: max 1 MB<br />File format: .JPEG, .PNG</small>
         </div>

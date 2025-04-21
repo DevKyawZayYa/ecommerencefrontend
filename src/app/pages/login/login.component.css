@@ -132,4 +132,25 @@
     text-decoration: underline;
     color: #77ffc0;
 }
+
+.textfield input:focus {
+    border: 2px solid #1e463e;
+}
+
+.textfield input.is-invalid {
+    border: 2px solid #dc3545;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    width: 100%;
+}
+
+.btn-login:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
   
