@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { AuthResponse } from '../../models/auth-response.model';
 import { RegisterRequest } from '../../models/register.model';
+import { ChangePasswordRequest, ChangePasswordResponse } from '../../models/change-password.model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,21 @@ export class AuthService {
 
   login(email: string, password: string) {
     return this.api.post<AuthResponse>('onboarding/login', { email, password });
+  }
+
+  changePassword(currentPassword: string, newPassword: string): Observable<string> {
+    const userId = this.getUserId();
+    if (!userId) {
+      throw new Error('User not authenticated');
+    }
+
+    const request: ChangePasswordRequest = {
+      userId: { value: userId },
+      currentPassword,
+      newPassword
+    };
+
+    return this.api.post<string>('Onboarding/changePassword', request, 'text');
   }
 
   logout() {

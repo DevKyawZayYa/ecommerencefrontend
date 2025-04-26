@@ -90,6 +90,11 @@ export const appRoutes: Routes = [
             (m) => m.ProductDetailComponent
           ),
       },  
+      {
+        path: 'account/password',
+        canActivate: [AuthGuard],
+        loadComponent: () => import('./pages/change-password/change-password.component').then(m => m.ChangePasswordComponent)
+      }
     ],
   },
   {
