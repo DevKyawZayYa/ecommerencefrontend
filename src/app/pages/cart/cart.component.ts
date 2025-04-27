@@ -82,10 +82,8 @@ export class CartComponent implements OnInit {
   checkout() {
     const selected = this.items.filter(i => this.selectedItems.has(i.productId));
   
-    // 💾 Store selected items in localStorage
     localStorage.setItem('selectedItems', JSON.stringify(selected));
   
-    // 🔁 Navigate to Checkout page
     this.router.navigate(['/checkout']);
   }
 

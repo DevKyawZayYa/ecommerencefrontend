@@ -10,7 +10,7 @@ import { text } from 'stream/consumers';
   providedIn: 'root'
 })
 export class CustomerService {
-  private baseUrl = 'User'; // ✅ No need to include full URL, handled by ApiService
+  private baseUrl = 'User'; // No need to include full URL, handled by ApiService
 
   constructor(private api: ApiService) {}
 

@@ -33,13 +33,11 @@ export const appConfig: ApplicationConfig = {
       maxOpened: 1
     }),
 
-    // ✅ Provide HttpClient with Fetch and DI Interceptors
     provideHttpClient(
       withFetch(),
       withInterceptorsFromDi() // Use interceptors declared with `HTTP_INTERCEPTORS`
     ),
 
-    // ✅ Register your custom AuthInterceptor
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

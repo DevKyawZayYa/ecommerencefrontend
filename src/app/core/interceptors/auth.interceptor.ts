@@ -79,24 +79,20 @@ export class AuthInterceptor implements HttpInterceptor {
   
             this.refreshTokenSubject.next(response.accessToken);
   
-            // ✅ Retry original request with new access token
             return next.handle(this.addTokenHeader(request, response.accessToken));
           }),
           catchError((err) => {
             this.isRefreshing = false;
   
-            // ❌ Refresh token invalid, logout and redirect
             this.authService.logout();
             return throwError(() => err);
           })
         );
       } else {
-        // ❌ No tokens found, treat as unauthenticated
         this.authService.logout();
       }
     }
   
-    // 🔁 Queue requests while refreshing
     return this.refreshTokenSubject.pipe(
       filter(token => token != null),
       take(1),

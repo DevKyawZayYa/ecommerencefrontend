@@ -1,10 +1,10 @@
-.shopee-product-container {
+.n-shope-product-container {
   max-width: 1200px;
   margin: 50px auto;
   padding: 0 20px;
 }
 
-.shopee-product-grid {
+.n-shope-product-grid {
   display: flex;
   gap: 30px;
   align-items: flex-start;
