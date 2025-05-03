@@ -21,7 +21,12 @@ jobs:
           mkdir -p ~/.ssh
           printf "%s\n" "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          echo "HOST is: ${{ secrets.EC2_HOST }}"
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "❌ EC2_HOST secret is not set."
+            exit 1
+          else
+            echo "✅ EC2_HOST is set to: ${{ secrets.EC2_HOST }}"
+          fi
           ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Deploy via SSH
