@@ -24,9 +24,9 @@ jobs:
         run: npm ci
 
       - name: Build Angular App
-        run: npm run build:ssr
+        run: npm run build
 
-      - name: Zip Built Output (SSR)
+      - name: Zip Dist Folder
         run: |
           cd dist/ecommerencefrontend
           zip -r ~/ecommerencefrontend.zip .
@@ -45,26 +45,29 @@ jobs:
       - name: Deploy on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            echo "✅ Connected to EC2. Starting deployment..."
+            echo "✅ Connected to EC2. Starting deploy..."
 
-            # Delete old files and zip
-            rm -rf ~/ecommerencefrontend
-            rm -f ~/ecommerencefrontend.zip
-
-            # Move new zip & unzip
-            mv ~/ecommerencefrontend.zip ~/ecommerencefrontend.zip
-            unzip -o ~/ecommerencefrontend.zip -d ~/ecommerencefrontend
-
-            cd ~/ecommerencefrontend
-
-            # Docker cleanup
+            # Clean old container/image
             docker stop ecommerencefrontend || true
             docker rm ecommerencefrontend || true
             docker rmi ecommerencefrontend || true
 
-            # Rebuild and run
+            # Clean old folder and unzip latest build
+            rm -rf ~/ecommerencefrontend
+            mkdir ~/ecommerencefrontend
+            unzip -o ~/ecommerencefrontend.zip -d ~/ecommerencefrontend
+
+            # Create Dockerfile if not exists (optional: you can skip this if Dockerfile is committed)
+            cat > ~/ecommerencefrontend/Dockerfile << DOCKERFILE
+            FROM nginx:alpine
+            COPY . /usr/share/nginx/html
+            EXPOSE 80
+            DOCKERFILE
+
+            # Build and run container
+            cd ~/ecommerencefrontend
             docker build -t ecommerencefrontend .
             docker run -d -p 8081:80 --name ecommerencefrontend ecommerencefrontend
 
-            echo "✅ Deployment complete and old files cleaned."
+            echo "✅ Deployed Angular App Successfully."
           EOF
