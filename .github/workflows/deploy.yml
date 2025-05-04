@@ -45,19 +45,19 @@ jobs:
       - name: Deploy on EC2
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
-            echo "✅ Connected to EC2. Starting deploy..."
+            echo "Connected to EC2. Starting deploy..."
 
             # Clean old container/image
-            docker stop ecommerencefrontend || true
-            docker rm ecommerencefrontend || true
-            docker rmi ecommerencefrontend || true
+            sudo docker stop ecommerencefrontend || true
+            sudo docker rm ecommerencefrontend || true
+            sudo docker rmi ecommerencefrontend || true
 
             # Clean old folder and unzip latest build
             rm -rf ~/ecommerencefrontend
             mkdir ~/ecommerencefrontend
             unzip -o ~/ecommerencefrontend.zip -d ~/ecommerencefrontend
 
-            # Create Dockerfile if not exists (optional: you can skip this if Dockerfile is committed)
+            # Create Dockerfile if not exists (optional)
             cat > ~/ecommerencefrontend/Dockerfile << DOCKERFILE
             FROM nginx:alpine
             COPY . /usr/share/nginx/html
@@ -66,8 +66,9 @@ jobs:
 
             # Build and run container
             cd ~/ecommerencefrontend
-            docker build -t ecommerencefrontend .
-            docker run -d -p 8081:80 --name ecommerencefrontend ecommerencefrontend
+            sudo docker build -t ecommerencefrontend .
+            sudo docker run -d -p 8081:80 --name ecommerencefrontend ecommerencefrontend
 
-            echo "✅ Deployed Angular App Successfully."
+            echo "Deployed Angular App Successfully."
           EOF
+
