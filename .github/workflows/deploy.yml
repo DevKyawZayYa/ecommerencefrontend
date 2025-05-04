@@ -68,7 +68,7 @@ jobs:
             ls -l ~/ecommerencefrontend
 
             # Create Dockerfile
-            echo -e "FROM nginx:alpine\nCOPY . /usr/share/nginx/html\nEXPOSE 80" > ~/ecommerencefrontend/Dockerfile
+            echo -e "FROM nginx:alpine\nCOPY browser /usr/share/nginx/html\nEXPOSE 80" > ~/ecommerencefrontend/Dockerfile
 
             # Build and run container
             cd ~/ecommerencefrontend
