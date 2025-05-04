@@ -29,16 +29,22 @@ jobs:
 
             cd ~/ecommerencefrontend
 
+            # Pull latest changes
+            git reset --hard HEAD
+            git pull origin main
+
             # Stop and remove existing container
             docker stop ecommerencefrontend || true
             docker rm ecommerencefrontend || true
 
-            # Remove old image (optional)
+            # Remove old image
             docker rmi ecommerencefrontend || true
 
-            # Build and run with the same name and port
-            docker build -t ecommerencefrontend .
+            # Rebuild without using cache
+            docker build --no-cache -t ecommerencefrontend .
+
+            # Run new container
             docker run -d -p 8081:80 --name ecommerencefrontend ecommerencefrontend
 
-            echo "Frontend redeployed successfully."
+            echo "Frontend redeployed with latest code."
           EOF
