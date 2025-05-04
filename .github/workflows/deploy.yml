@@ -9,6 +9,7 @@ jobs:
   deploy:
     name: Deploy App
     runs-on: ubuntu-latest
+    environment: main
 
     steps:
       - name: Checkout code
