@@ -61,12 +61,8 @@ jobs:
             echo "Listing files in ~/ecommerencefrontend after unzip:"
             ls -l ~/ecommerencefrontend
 
-            # Create Dockerfile if not exists (optional)
-            cat > ~/ecommerencefrontend/Dockerfile << DOCKERFILE
-            FROM nginx:alpine
-            COPY . /usr/share/nginx/html
-            EXPOSE 80
-            DOCKERFILE
+            # Create Dockerfile
+            echo -e "FROM nginx:alpine\nCOPY . /usr/share/nginx/html\nEXPOSE 80" > ~/ecommerencefrontend/Dockerfile
 
             # Build and run container
             cd ~/ecommerencefrontend
