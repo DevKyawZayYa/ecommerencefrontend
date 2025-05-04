@@ -22,27 +22,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts || true
 
-      - name: Test SSH Connection
-        run: |
-          ssh -v -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo connected"
-
-      - name: Debug SSH Key
-        run: |
-          ls -l ~/.ssh
-          file ~/.ssh/id_rsa
-          head -5 ~/.ssh/id_rsa
-          tail -5 ~/.ssh/id_rsa
-
-      - name: Debug Secrets
-        run: |
-          echo "EC2_USER: ${{ secrets.EC2_USER }}"
-          echo "EC2_HOST: ${{ secrets.EC2_HOST }}"
-          echo "EC2_KEY: [hidden]"
-
       - name: Deploy via SSH
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<-'EOF'
-            echo "✅ Connected to EC2 and starting deployment..."
+            echo "Connected to EC2 and starting deployment..."
 
             cd ~/ecommerencefrontend
 
@@ -57,5 +40,5 @@ jobs:
             docker build -t ecommerencefrontend .
             docker run -d -p 8081:80 --name ecommerencefrontend ecommerencefrontend
 
-            echo "✅ Frontend redeployed successfully."
+            echo "Frontend redeployed successfully."
           EOF
