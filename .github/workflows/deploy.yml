@@ -7,44 +7,58 @@ on:
 
 jobs:
   deploy:
-    name: Deploy App
+    name: Deploy Angular App to EC2
     runs-on: ubuntu-latest
     environment: main
 
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Set up SSH
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Angular App
+        run: npm run build --prod
+
+      - name: Zip Dist Folder
+        run: zip -r app.zip dist/ecommerencefrontend
+
+      - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts || true
 
-      - name: Deploy via SSH
+      - name: Upload to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<-'EOF'
-            echo "Connected to EC2 and starting deployment..."
+          scp -o StrictHostKeyChecking=no app.zip ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/app.zip
+
+      - name: Deploy on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            echo "✅ Connected to EC2. Starting deploy..."
+
+            # Clean old build
+            rm -rf ~/ecommerencefrontend
+            unzip -o ~/app.zip -d ~/ecommerencefrontend
 
             cd ~/ecommerencefrontend
 
-            # Pull latest changes
-            git reset --hard HEAD
-            git pull origin main
-
-            # Stop and remove existing container
+            # Clean old container & image
             docker stop ecommerencefrontend || true
             docker rm ecommerencefrontend || true
-
-            # Remove old image
             docker rmi ecommerencefrontend || true
 
-            # Rebuild without using cache
-            docker build --no-cache -t ecommerencefrontend .
-
-            # Run new container
+            # Docker build & run
+            docker build -t ecommerencefrontend .
             docker run -d -p 8081:80 --name ecommerencefrontend ecommerencefrontend
 
-            echo "Frontend redeployed with latest code."
+            echo "✅ Deployed Angular App Successfully."
           EOF
