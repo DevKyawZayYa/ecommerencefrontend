@@ -32,6 +32,12 @@ jobs:
           head -5 ~/.ssh/id_rsa
           tail -5 ~/.ssh/id_rsa
 
+      - name: Debug Secrets
+        run: |
+          echo "EC2_USER: ${{ secrets.EC2_USER }}"
+          echo "EC2_HOST: ${{ secrets.EC2_HOST }}"
+          echo "EC2_KEY: [hidden]"
+
       - name: Deploy via SSH
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} <<-'EOF'
