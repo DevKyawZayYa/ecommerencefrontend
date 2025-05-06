@@ -1,0 +1,11 @@
+<div *ngIf="loading">Loading payment status...</div>
+<div *ngIf="error">{{ error }}</div>
+<div *ngIf="!loading && !error">
+  <h2>Payment Status: {{ paymentStatus }}</h2>
+  <div *ngIf="paymentStatus === 'Paid'">
+    Thank you for your purchase!
+  </div>
+  <div *ngIf="paymentStatus !== 'Paid'">
+    There was an issue with your payment. Please contact support.
+  </div>
+</div>

@@ -1,0 +1,45 @@
+:host {
+    display: block;
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 32px 24px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    font-family: 'Segoe UI', Arial, sans-serif;
+  }
+  
+  h2 {
+    color: #2e7d32;
+    margin-bottom: 16px;
+    font-size: 1.5rem;
+    text-align: center;
+  }
+  
+  div[ngIf="loading"] {
+    color: #1976d2;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  
+  div[ngIf="error"] {
+    color: #d32f2f;
+    text-align: center;
+    font-size: 1.1rem;
+  }
+  
+  div[ngIf="!loading && !error"] {
+    text-align: center;
+  }
+  
+  .payment-success {
+    color: #388e3c;
+    font-weight: bold;
+    margin-top: 12px;
+  }
+  
+  .payment-failed {
+    color: #d32f2f;
+    font-weight: bold;
+    margin-top: 12px;
+  }

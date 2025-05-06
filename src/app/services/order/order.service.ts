@@ -42,9 +42,8 @@ export class OrderService {
 
   getOrderListByCustomerId(customerId: string): Observable<any> {
     const payload = {
-      orderId: {
-        value: '00000000-0000-0000-0000-000000000000' // optional or empty GUID
-      },
+      orderId: '00000000-0000-0000-0000-000000000000' // optional or empty GUID
+      ,
       customerId: {
         value: customerId
       }
@@ -54,7 +53,7 @@ export class OrderService {
 
   getOrderDetailById(orderId: string, customerId: string): Observable<any> {
     const payload = {
-      orderId: { value: orderId },
+      orderId: orderId,
       customerId: { value: customerId }
     };
     return this.api.post('orders/getOrderById', payload);

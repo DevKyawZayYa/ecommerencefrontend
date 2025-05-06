@@ -114,22 +114,24 @@ export class CheckoutComponent implements OnInit {
   }
 
   startStripeCheckout(): void {
-    const stripePayload = {
-      items: this.items.map(item => ({
-        productName: item.name,
-        quantity: item.quantity,
-        price: item.price
-      }))
-    };
+    const payload = this.items.map(item => ({
+      productId: item.id?.value || item.id || item.productId,
+      productName: item.name,
+      price: item.price,
+      quantity: item.quantity
+    }));
 
-    this.api.post<any>('stripe/createCheckoutSession', stripePayload).subscribe({
+    this.api.post<any>('payment/checkout', payload).subscribe({
       next: (res) => {
-        if (res?.url) {
-          localStorage.setItem('stripeSession', JSON.stringify(res));
+        if (res?.sessionUrl) {
+          localStorage.setItem('stripeSession', JSON.stringify({
+            sessionId: res.sessionId,
+            customerId: this.customer.id
+          }));
           localStorage.setItem('selectedItems', JSON.stringify(this.items));
-          window.location.href = res.url;
+          window.location.href = res.sessionUrl;
         } else {
-          alert('Failed to get Stripe URL');
+          alert('❌ Failed to get Stripe URL');
         }
       },
       error: err => {
