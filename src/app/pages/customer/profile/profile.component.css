@@ -233,3 +233,35 @@ small {
     align-self: flex-start;
   }
 }
+
+@media (max-width: 430px) {
+  .profile-layout {
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    max-width: 100vw;
+  }
+  .profile-main {
+    width: 100%;
+    min-width: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .profile-wrapper {
+    width: 100%;
+    max-width: 98vw;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    border: 1px solid #eee;
+    padding: 16px 8px;
+  }
+  .profile-header h2 {
+    font-size: 1.1rem;
+  }
+  .profile-avatar img {
+    width: 80px;
+    height: 80px;
+  }
+}

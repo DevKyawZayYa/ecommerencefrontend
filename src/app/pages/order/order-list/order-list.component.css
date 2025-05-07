@@ -141,4 +141,34 @@
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
 }
   
+@media (max-width: 430px) {
+  .account-layout {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+  .account-content {
+    width: 100%;
+    padding: 0;
+  }
+  .order-card {
+    padding: 0.5rem;
+    font-size: 0.95rem;
+  }
+  .order-header, .order-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .item-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .item-image {
+    width: 48px;
+    height: 48px;
+  }
+}
+  
   

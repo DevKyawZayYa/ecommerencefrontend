@@ -69,3 +69,37 @@
 .text-muted {
   color: #6c757d;
 }
+
+@media (max-width: 430px) {
+  .account-layout {
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+  }
+  .account-content {
+    width: 100%;
+    padding: 0;
+  }
+  .order-detail-container {
+    padding: 10px;
+  }
+  .order-card {
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+  .item-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+  .product-thumbnail {
+    width: 48px;
+    height: 48px;
+  }
+  .summary {
+    font-size: 0.95rem;
+  }
+  .total {
+    font-size: 1.05rem;
+  }
+}
