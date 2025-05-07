@@ -3,77 +3,80 @@
     <a class="navbar-brand d-flex align-items-center" routerLink="/">
       <img [src]="'assets/logo.svg'" alt="Logo" class="logo-img me-2" />
     </a>
+    <div class="flex-grow-1"></div>
+    <!-- Hamburger Menu Button (moved to right) -->
+    <button class="navbar-toggler ms-auto" type="button" (click)="toggleNavbar()" aria-label="Toggle navigation">
+      <i class="bi bi-list text-white"></i>
+    </button>
 
     <!-- Center Nav Links -->
-    <div class="d-none d-lg-flex align-items-center flex-grow-1 justify-content-center nav-links">
-      <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: '269fabb8-4d81-4904-a379-d8b9b781c196' }">Vehicles</a>
-      <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: 'e0cdd8af-a3e4-42e4-8d89-ba2e5c3d2ece' }">Men Fashion</a>
-      <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: 'ef9b0469-41af-4f1a-8694-0f61f2d8d7d4' }">Women Fashion</a>
-      <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: '1b748d3b-d199-42d6-a216-d280a463d092' }">Electronics</a>
-      <a class="nav-link text-white px-3" routerLink="/products">All Products</a>
-     <!-- Categories Dropdown -->
-
-     <div class="nav-item dropdown" (mouseover)="showCategoryMenu = true" (mouseleave)="showCategoryMenu = false">
-      <a class="nav-link dropdown-toggle" role="button">
-        Categories
-      </a>
-      <div class="dropdown-menu" [class.show]="showCategoryMenu">
-        <ng-container *ngFor="let category of categories">
-          <a class="dropdown-item" [routerLink]="['/products']" [queryParams]="{ category: category.id }">
-            {{ category.name }}
+    <div class="navbar-collapse" [class.show]="isNavbarOpen">
+      <div class="d-flex flex-column flex-lg-row align-items-center flex-grow-1 justify-content-center nav-links">
+        <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: '269fabb8-4d81-4904-a379-d8b9b781c196' }" (click)="closeNavbar()">Vehicles</a>
+        <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: 'e0cdd8af-a3e4-42e4-8d89-ba2e5c3d2ece' }" (click)="closeNavbar()">Men Fashion</a>
+        <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: 'ef9b0469-41af-4f1a-8694-0f61f2d8d7d4' }" (click)="closeNavbar()">Women Fashion</a>
+        <a class="nav-link text-white px-3" [routerLink]="['/products']" [queryParams]="{ category: '1b748d3b-d199-42d6-a216-d280a463d092' }" (click)="closeNavbar()">Electronics</a>
+        <a class="nav-link text-white px-3" routerLink="/products" (click)="closeNavbar()">All Products</a>
+        <!-- Categories Dropdown -->
+        <div class="nav-item dropdown" (mouseover)="showCategoryMenu = true" (mouseleave)="showCategoryMenu = false">
+          <a class="nav-link dropdown-toggle" role="button">
+            Categories
           </a>
-        </ng-container>
-      </div>
-    </div>
-    </div>
-
-    <!-- Search + Actions -->
-    <div class="d-flex align-items-center">
-      <form class="d-flex me-3" (ngSubmit)="onSearch($event)">
-        <input class="form-control me-2" 
-               type="search" 
-               placeholder="Search" 
-               [(ngModel)]="searchQuery"
-               name="search" />
-        <button class="btn btn-light" type="submit">
-          <i class="bi bi-search"></i>
-        </button>
-      </form>
-
-      <!-- User Profile Dropdown -->
-      <!-- Profile Dropdown (Hover) -->
-      <div class="user-dropdown position-relative ms-3 me-3 text-white" *ngIf="isLoggedIn">
-        <div class="d-flex align-items-center cursor-pointer" (click)="toggleDropdown()">
-          <i class="bi bi-person-circle fs-5 me-1"></i>
-          <span class="me-1">{{ username }}</span>
-          <i class="bi bi-caret-down-fill fs-6"></i>
+          <div class="dropdown-menu" [class.show]="showCategoryMenu">
+            <ng-container *ngFor="let category of categories">
+              <a class="dropdown-item" [routerLink]="['/products']" [queryParams]="{ category: category.id }" (click)="closeNavbar()">
+                {{ category.name }}
+              </a>
+            </ng-container>
+          </div>
         </div>
-      
-        <ul 
-          class="dropdown-menu dropdown-menu-end shadow-sm mt-2 py-2 show"
-          *ngIf="showMenu"
-          style="position: absolute; top: 100%; right: 0; z-index: 1000;"
-        >
-        <a class="dropdown-item" routerLink="/account/profile" (click)="toggleDropdown()">👤 My Account</a>
-        <li><a class="dropdown-item" routerLink="/account/my-purchase" (click)="toggleDropdown()">🧾 My Purchase</a></li>
-          <li><hr class="dropdown-divider" /></li>
-          <li><a class="dropdown-item text-danger" (click)="onLogout()">🚪 Logout</a></li>
-        </ul>
       </div>
-      
 
-      <a class="nav-icon text-white me-3" href="#">
-        <img src="https://flagcdn.com/16x12/my.png" alt="Malaysia">
-      </a>
-      <a class="nav-link position-relative" routerLink="/cart">
-        <i class="bi bi-cart fs-5"></i>
-        <span 
-          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
-          *ngIf="cartCount > 0">
-          {{ cartCount }}
-        </span>
-      </a>
-      
+      <!-- Search + Actions -->
+      <div class="d-flex flex-column flex-lg-row align-items-center mt-3 mt-lg-0">
+        <form class="d-flex me-3 w-100 w-lg-auto" (ngSubmit)="onSearch($event)">
+          <input class="form-control me-2" 
+                 type="search" 
+                 placeholder="Search" 
+                 [(ngModel)]="searchQuery"
+                 name="search" />
+          <button class="btn btn-light" type="submit">
+            <i class="bi bi-search"></i>
+          </button>
+        </form>
+
+        <!-- User Profile Dropdown -->
+        <div class="user-dropdown position-relative ms-3 me-3 text-white" *ngIf="isLoggedIn">
+          <div class="d-flex align-items-center cursor-pointer" (click)="toggleDropdown()">
+            <i class="bi bi-person-circle fs-5 me-1"></i>
+            <span class="me-1">{{ username }}</span>
+            <i class="bi bi-caret-down-fill fs-6"></i>
+          </div>
+        
+          <ul 
+            class="dropdown-menu dropdown-menu-end shadow-sm mt-2 py-2 show"
+            *ngIf="showMenu"
+            style="position: absolute; top: 100%; right: 0; z-index: 1000;"
+          >
+            <a class="dropdown-item" routerLink="/account/profile" (click)="toggleDropdown(); closeNavbar()">👤 My Account</a>
+            <li><a class="dropdown-item" routerLink="/account/my-purchase" (click)="toggleDropdown(); closeNavbar()">🧾 My Purchase</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item text-danger" (click)="onLogout(); closeNavbar()">🚪 Logout</a></li>
+          </ul>
+        </div>
+
+        <a class="nav-icon text-white me-3" href="#">
+          <img src="https://flagcdn.com/16x12/my.png" alt="Malaysia">
+        </a>
+        <a class="nav-link position-relative" routerLink="/cart" (click)="closeNavbar()">
+          <i class="bi bi-cart fs-5"></i>
+          <span 
+            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+            *ngIf="cartCount > 0">
+            {{ cartCount }}
+          </span>
+        </a>
+      </div>
     </div>
   </div>
 </nav>

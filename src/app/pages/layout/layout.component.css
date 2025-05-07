@@ -79,4 +79,133 @@
     transform: translateY(0);
   }
   
+  /* Responsive Styles */
+  .navbar-toggler {
+    border: none;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+  }
+  
+  .navbar-toggler:focus {
+    box-shadow: none;
+    outline: none;
+  }
+  
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #1e463e;
+    padding: 1rem;
+    z-index: 1000;
+    display: none;
+  }
+  
+  .navbar-collapse.show {
+    display: block;
+  }
+  
+  @media (min-width: 992px) {
+    .navbar-collapse {
+      position: static;
+      display: block;
+      padding: 0;
+    }
+  
+    .navbar-toggler {
+      display: none;
+    }
+  
+    .nav-links {
+      flex-direction: row !important;
+    }
+  
+    .d-flex.flex-column.flex-lg-row {
+      flex-direction: row !important;
+    }
+  
+    .mt-3.mt-lg-0 {
+      margin-top: 0 !important;
+    }
+  
+    .w-100.w-lg-auto {
+      width: auto !important;
+    }
+  }
+  
+  @media (max-width: 991px) {
+    .navbar-collapse {
+      position: fixed;
+      top: 64px; /* height of navbar, adjust if needed */
+      left: 0;
+      right: 0;
+      width: 100vw;
+      background: #1e463e;
+      z-index: 2000;
+      padding: 1.5rem 1rem 1rem 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border-radius: 0 0 12px 12px;
+      display: none;
+    }
+    .navbar-collapse.show {
+      display: block;
+    }
+    .nav-links {
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+    .nav-link {
+      padding: 0.75rem 0;
+      width: 100%;
+      text-align: center;
+      font-size: 1.1rem;
+    }
+    .dropdown-menu {
+      position: static !important;
+      transform: none !important;
+      width: 100%;
+      text-align: center;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: none;
+      box-shadow: none;
+    }
+    .dropdown-item {
+      color: white;
+    }
+    .dropdown-item:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+    .user-dropdown .dropdown-menu {
+      position: static !important;
+      min-width: 100%;
+      left: 0;
+      right: 0;
+    }
+    .d-flex.flex-column.flex-lg-row {
+      flex-direction: column !important;
+      width: 100%;
+    }
+    .mt-3.mt-lg-0 {
+      margin-top: 1rem !important;
+    }
+    .w-100.w-lg-auto {
+      width: 100% !important;
+    }
+    .container-fluid {
+      flex-direction: row;
+      align-items: center !important;
+      justify-content: flex-start !important;
+      position: relative;
+    }
+    .navbar-toggler {
+      margin-left: auto;
+      display: block;
+      z-index: 2100;
+    }
+    .flex-grow-1 {
+      flex-grow: 1;
+    }
+  }
+  
   

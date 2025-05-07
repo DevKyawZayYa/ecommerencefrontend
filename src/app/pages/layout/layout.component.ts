@@ -27,6 +27,7 @@ export class LayoutComponent implements OnInit, OnDestroy {
   showMenu = false;
   username = '';
   isLoggedIn = true;
+  isNavbarOpen = false;
 
   cartCount = 0;
   private cartSubscription: Subscription;
@@ -109,5 +110,13 @@ export class LayoutComponent implements OnInit, OnDestroy {
         queryParams: { search: this.searchQuery.trim() }
       });
     }
+  }
+
+  toggleNavbar() {
+    this.isNavbarOpen = !this.isNavbarOpen;
+  }
+
+  closeNavbar() {
+    this.isNavbarOpen = false;
   }
 }
