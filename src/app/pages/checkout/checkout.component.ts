@@ -113,10 +113,7 @@ export class CheckoutComponent implements OnInit {
     }
   }
 
-  startStripeCheckout(): void {
-
-    debugger;
-    
+  startStripeCheckout(): void { 
     const payload = this.items.map(item => ({
       productId: item.productId,
       productName: item.name,
