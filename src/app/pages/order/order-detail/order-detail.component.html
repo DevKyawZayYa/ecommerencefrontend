@@ -5,7 +5,7 @@
     <div *ngIf="!loading && order" class="order-detail-container">
       <div class="order-card">
         <h2>🧾 Order Summary</h2>
-        <p><strong>Status:</strong> {{ order.status }}</p>
+        <p><strong>PaymentStatus:</strong> {{ order.paymentStatus }}</p>
         <p><strong>Delivery Status:</strong> {{ order.deliveryStatus }}</p>
         <p><strong>Order Date:</strong> {{ order.orderDate | date:'medium' }}</p>
     
