@@ -51,6 +51,10 @@ export class ProductDetailComponent {
     if (this.quantity > 1) this.quantity--;
   }
 
+  getTextColor(backgroundColor: string): string {
+    return ['black', 'red','blue', 'navy blue', 'gray', 'gold', 'rose', 'pink'].includes(backgroundColor.toLowerCase()) ? 'white' : 'black';
+  }
+
   addToCart() {
     if (!this.product) return;
 

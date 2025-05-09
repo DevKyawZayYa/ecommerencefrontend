@@ -9,6 +9,7 @@ export interface Product {
   id: { value: string };
   name: string;
   description: string;
+  color: string;
   price: { amount: number };
   sku: { value: string };
   primaryImageUrl?: string | null;

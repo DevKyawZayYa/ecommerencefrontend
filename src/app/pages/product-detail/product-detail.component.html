@@ -37,7 +37,11 @@
       <div class="info-row">
         <strong>Color:</strong>
         <div class="color-options">
-          <button *ngFor="let color of product.colors || ['Black']">{{ color }}</button>
+          <button 
+            [ngStyle]="{ 'background-color': product.color, 'color': getTextColor(product.color) }" 
+            class="color-button">
+            {{ product.color }}
+          </button>
         </div>
       </div>
 
