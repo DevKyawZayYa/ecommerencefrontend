@@ -61,7 +61,7 @@ export class CheckoutComponent implements OnInit {
 
   handlePlaceOrderClick(): void {
     if (this.selectedPaymentMethod === 'CashOnDelivery') {
-      const payload = this.orderService.buildOrderPayload(this.customer, this.items, this.shippingCost);
+      const payload = this.orderService.buildOrderPayload(this.customer, this.items, this.shippingCost, 'COD');
       this.orderService.placeOrder(payload).subscribe({
         next: (res: any) => {
           const orderId = res?.value?.orderId ?? 'mock-id';

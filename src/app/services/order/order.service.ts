@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 export class OrderService {
   constructor(private api: ApiService) {}
 
-  buildOrderPayload(customer: any, items: any[], shippingCost: number): any {
+  buildOrderPayload(customer: any, items: any[], shippingCost: number, paymentMethod: string): any {
     return {
       customerId: { value: customer.id },
       items: items.map(item => ({
@@ -19,7 +19,8 @@ export class OrderService {
       shippingCost,
       discountAmount: 0,
       status: 'Pending',
-      paymentStatus: 'Pending',
+      paymentMethod,
+      paymentStatus: paymentMethod === 'COD' ? 'COD' : 'Pending',
       deliveryStatus: 'NotShipped'
     };
   }
