@@ -5,6 +5,7 @@ import { AuthGuard } from './guard/auth.guard';
 import { PaymentCancelComponent } from './pages/payment-cancel/payment-cancel.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { RegisterComponent } from './pages/register/register.component';
+import { PaymentSuccessComponent } from './pages/payment-success/payment-success.component';
 
 export const appRoutes: Routes = [
   {
@@ -45,6 +46,12 @@ export const appRoutes: Routes = [
         loadComponent: () =>
           import('./pages/checkout/checkout.component').then((m) => m.CheckoutComponent),
         canActivate: [AuthGuard],
+      },
+      {
+        path: 'payment-success',
+        component: PaymentSuccessComponent,
+        canActivate: [AuthGuard],
+
       },
       {
         path: 'payment-cancel',
