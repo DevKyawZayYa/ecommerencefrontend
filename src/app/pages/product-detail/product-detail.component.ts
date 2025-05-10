@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth/auth.service';
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css']
 })
-export class ProductDetailComponent {
+export class ProductDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private api = inject(ApiService);
   private cart = inject(CartService);
@@ -30,6 +30,7 @@ export class ProductDetailComponent {
 
   mainImage: string = '';
   galleryImages: string[] = [];
+  estimatedDeliveryDate: string = '';
 
   ngOnInit() {
     this.api.get<Product>(`Products/${this.route.snapshot.paramMap.get('id')}`).subscribe(res => {
@@ -40,6 +41,14 @@ export class ProductDetailComponent {
       const primary = sorted.find(x => x.isPrimary);
       this.mainImage = primary?.imageUrl || sorted[0]?.imageUrl || '';
       this.galleryImages = sorted.map(x => x.imageUrl);
+    });
+
+    const today = new Date();
+    const deliveryDate = new Date(today.setDate(today.getDate() + 3));
+    this.estimatedDeliveryDate = deliveryDate.toLocaleDateString('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
     });
   }
 

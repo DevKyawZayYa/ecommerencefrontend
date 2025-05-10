@@ -1,16 +1,16 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-payment-success',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, RouterModule],
   templateUrl: './payment-success.component.html',
-  styleUrl: './payment-success.component.css'
+  styleUrls: ['./payment-success.component.css']
 })
 export class PaymentSuccessComponent {
-  constructor(private router: Router) {}
-
-  goToProducts() {
-    this.router.navigate(['/products']);
-  }
+  constructor(
+    public router: Router,
+  ) {}
 }

@@ -31,7 +31,7 @@
       </div>
 
       <div class="info-row">
-        <strong>Shipping:</strong> Guaranteed to get by 24 Apr
+        <strong>Shipping:</strong> Guaranteed to get by {{ estimatedDeliveryDate }}
       </div>
 
       <div class="info-row">
@@ -56,7 +56,7 @@
 
       <div class="action-buttons">
         <button class="add-to-cart" (click)="addToCart()">🛒 Add To Cart</button>
-        <button class="buy-now">Buy With Voucher RM{{ product.price.amount }}</button>
+        <button class="buy-now">Get Premium Membership for RM{{ product.price.amount - 150 }}</button>
       </div>
     </div>
   </div>
