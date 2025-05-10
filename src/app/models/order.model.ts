@@ -10,5 +10,7 @@ export interface OrderItem {
     status: string;
     deliveryStatus: string;
     items: OrderItem[];
+    paymentMethod: 'COD' | 'Stripe';
+    paymentStatus: 'COD' | 'Pending';
   }
   

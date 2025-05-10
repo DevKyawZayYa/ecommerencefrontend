@@ -70,6 +70,40 @@
   color: #6c757d;
 }
 
+.order-summary-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.badge-info {
+  background: #cce5ff;
+  color: #004085;
+  font-weight: 600;
+}
+
+.badge-success {
+  background: #d4edda;
+  color: #155724;
+  font-weight: 600;
+}
+
+.badge-warning {
+  background: #fff3cd;
+  color: #856404;
+  font-weight: 600;
+}
+
+.badge-danger {
+  background: #f8d7da;
+  color: #721c24;
+  font-weight: 600;
+}
+
+.order-summary-details > div {
+  margin-bottom: 0.25rem;
+}
+
 @media (max-width: 430px) {
   .account-layout {
     flex-direction: column;

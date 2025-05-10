@@ -12,8 +12,9 @@
       
       <div class="order-header">
         <div class="status-section">
+          <span class="badge badge-info">{{ order.paymentMethod }}</span>
           <span class="badge" [ngClass]="{
-            'badge-warning': order.paymentStatus === 'Processing',
+            'badge-warning': order.paymentStatus === 'COD',
             'badge-success': order.paymentStatus === 'Paid',
             'badge-danger': order.status === 'Failed'
           }">{{ order.paymentStatus }}</span>

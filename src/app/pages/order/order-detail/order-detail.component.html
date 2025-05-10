@@ -4,11 +4,19 @@
   <div class="account-content">
     <div *ngIf="!loading && order" class="order-detail-container">
       <div class="order-card">
-        <h2>🧾 Order Summary</h2>
-        <p><strong>PaymentStatus:</strong> {{ order.paymentStatus }}</p>
-        <p><strong>Delivery Status:</strong> {{ order.deliveryStatus }}</p>
-        <p><strong>Order Date:</strong> {{ order.orderDate | date:'medium' }}</p>
-    
+        <div class="order-summary-header d-flex align-items-center gap-3 mb-3">
+          <h2 class="mb-0"><i class="bi bi-receipt"></i> Order Summary</h2>
+        </div>
+        <div class="order-summary-details mb-3">
+          <div><strong>Payment Method: </strong> 
+            <span class="badge badge-info">{{ order.paymentMethod }}</span>
+          </div>
+          <div><strong>Payment Status: </strong> 
+            <span class="badge badge-info">{{ order.paymentStatus }}</span>
+          </div>
+          <div><strong>Delivery Status:</strong> {{ order.deliveryStatus }}</div>
+          <div><strong>Order Date:</strong> {{ order.orderDate | date:'medium' }}</div>
+        </div>
         <hr />
     
         <h4 class="mb-3">📦 Ordered Items</h4>
